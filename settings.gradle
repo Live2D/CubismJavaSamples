@@ -1,0 +1,3 @@
+rootProject.name = "Demo"
+include ':Framework:framework'
+include ':Sample'
