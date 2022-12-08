@@ -8,15 +8,9 @@ This is a sample implementation of an application that displays models output by
 
 It is used in conjunction with Cubism Java Framework and Live2D Cubism Core Java.
 
-This repository is an **alpha version**. If you have any bug reports or suggestions, please send them to us by creating an [issue](https://github.com/Live2D/CubismJavaSamples/issues) using the GitHub feature.
-
 ## License
 
 Please check the [license](LICENSE.md) before using this SDK.
-
-## Notices
-
-Please check the [notices](NOTICE.md) before using this SDK.
 
 ## Directory structure
 
@@ -45,7 +39,7 @@ After cloning this repository, the files will be added by cloning the submodule.
 A library for loading the model.
 Live2D Cubism Core for Java is not included in this repository.
 
-To download, please refer to [this](https://community.live2d.com/discussion/1480/download-cubism-sdk-for-java-alpha/) page. Copy the contents of the downloaded ZIP file to the 'Core' directory of this repository and link it to the program.
+To download, please refer to [this](https://www.live2d.com/download/cubism-sdk/download-java/) page. Copy the contents of the downloaded ZIP file to the 'Core' directory of this repository and link it to the program.
 
 ## How to build
 
@@ -65,8 +59,8 @@ Please refer to [CHANGELOG.md](CHANGELOG.md) for the changelog of this repositor
 
 | Development Tools | Version          |
 |-------------------|------------------|
-| Android Studio    | Dolphin 2021.3.1 |
-| IntelliJ IDEA     | 2022.1.4         |
+| Android Studio    | Dolphin 2021.3.1 Patch 1 |
+| IntelliJ IDEA     | 2022.3           |
 | CMake             | 3.1.0            |
 | Gradle            | 6.9              |
 
@@ -75,12 +69,13 @@ Please refer to [CHANGELOG.md](CHANGELOG.md) for the changelog of this repositor
 | Android SDK tools | Version      |
 | --- |--------------|
 | Android NDK | 21.4.7075529 |
-| Android SDK | 30.0.0       |
+| Android SDK | 31.0.0       |
 | CMake | 3.1.0        |
 
 ## Operation environment
 
 ### Java
+
 This sample application runs with **Java SE 6** or higher Java versions.
 
 ### Android
@@ -89,9 +84,25 @@ This sample application runs with **Java SE 6** or higher Java versions.
 |---------|-------------------| --- |
 | 12      | Redmi Note 10 Pro ||
 | 7.1.1   | Nexus 9           | ✔︎ |
-| 4.1   | Pixel 4a          ||
+| 4.1   | Pixel 5           ||
 
 This sample application runs with **Android API 16** or higher Android versions.
+
+## Contributing
+
+There are many ways to contribute to the project: logging bugs, submitting pull requests on this GitHub, and reporting issues and making suggestions in Live2D Community.
+
+### Forking And Pull Requests
+
+We very much appreciate your pull requests, whether they bring fixes, improvements, or even new features. Note, however, that the wrapper is designed to be as lightweight and shallow as possible and should therefore only be subject to bug fixes and memory/performance improvements. To keep the main repository as clean as possible, create a personal fork and feature branches there as needed.
+
+### Bugs
+
+We are regularly checking issue-reports and feature requests at Live2D Community. Before filing a bug report, please do a search in Live2D Community to see if the issue-report or feature request has already been posted. If you find your issue already exists, make relevant comments and add your reaction.
+
+### Suggestions
+
+We're also interested in your feedback for the future of the SDK. You can submit a suggestion or feature request at Live2D Community. To make this process more effective, we're asking that you include more information to help define them more clearly.
 
 ## Community
 
@@ -99,6 +110,3 @@ If you would like to make suggestions or ask questions about how to use Cubism S
 
 - [Live2D community](http://community.live2d.com/)
 - [Live2D 公式コミュニティ (Japanese)](https://creatorsforum.live2d.com/)
-
-
-

@@ -37,7 +37,7 @@ public class LAppMinimumLive2DManager {
         int width = LAppMinimumDelegate.getInstance().getWindowWidth();
         int height = LAppMinimumDelegate.getInstance().getWindowHeight();
 
-        CubismMatrix44 projection = CubismMatrix44.create();
+        projection.loadIdentity();
 
         if (model.getModel().getCanvasWidth() > 1.0f && width < height) {
             // 横に長いモデルを縦長ウィンドウに表示する際モデルの横サイズでscaleを算出する
@@ -102,5 +102,6 @@ public class LAppMinimumLive2DManager {
      */
     private final LAppDefine.ModelDir currentModel;
     private final CubismMatrix44 viewMatrix = CubismMatrix44.create();
+    private final CubismMatrix44 projection = CubismMatrix44.create();
 }
 

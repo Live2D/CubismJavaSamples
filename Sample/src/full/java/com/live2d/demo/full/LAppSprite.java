@@ -50,8 +50,6 @@ public class LAppSprite {
 
     public void render() {
         // Set the camera position (View matrix)
-        glEnable(GL_TEXTURE_2D);
-
         uvVertex[0] = 1.0f;
         uvVertex[1] = 0.0f;
         uvVertex[2] = 0.0f;
@@ -116,8 +114,6 @@ public class LAppSprite {
      * @param uvVertex uv頂点座標
      */
     public void renderImmediate(int textureId, final float[] uvVertex) {
-        GLES20.glEnable(GL_TEXTURE_2D);
-
         // attribute属性を有効にする
         GLES20.glEnableVertexAttribArray(positionLocation);
         GLES20.glEnableVertexAttribArray(uvLocation);
@@ -168,7 +164,7 @@ public class LAppSprite {
     public void resize(float x, float y, float width, float height) {
         rect.left = x - width * 0.5f;
         rect.right = x + width * 0.5f;
-        rect.up = x + height * 0.5f;
+        rect.up = y + height * 0.5f;
         rect.down = y - height * 0.5f;
     }
 

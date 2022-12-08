@@ -55,7 +55,7 @@ public class LAppLive2DManager {
                 continue;
             }
 
-            CubismMatrix44 projection = CubismMatrix44.create();
+            projection.loadIdentity();
 
             if (model.getModel().getCanvasWidth() > 1.0f && width < height) {
                 // 横に長いモデルを縦長ウィンドウに表示する際モデルの横サイズでscaleを算出する
@@ -269,5 +269,8 @@ public class LAppLive2DManager {
      * 表示するシーンのインデックス値
      */
     private ModelDir currentModel;
+
+    // onUpdateメソッドで使用されるキャッシュ変数
     private final CubismMatrix44 viewMatrix = CubismMatrix44.create();
+    private final CubismMatrix44 projection = CubismMatrix44.create();
 }
