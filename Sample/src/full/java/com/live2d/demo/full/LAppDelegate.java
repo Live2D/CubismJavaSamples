@@ -25,6 +25,15 @@ public class LAppDelegate {
     }
 
     /**
+     * クラスのインスタンス（シングルトン）を解放する。
+     */
+    public static void releaseInstance() {
+        if (s_instance != null) {
+            s_instance = null;
+        }
+    }
+
+    /**
      * アプリケーションを非アクティブにする
      */
     public void deactivateApp() {
@@ -53,7 +62,7 @@ public class LAppDelegate {
     }
 
     public void onDestroy() {
-        // TODO: インスタンスのリリース
+        releaseInstance();
     }
 
     public void onSurfaceCreated() {
@@ -172,8 +181,6 @@ public class LAppDelegate {
 
         GLES20.glShaderSource(fragmentShaderId, fragmentShader);
         GLES20.glCompileShader(fragmentShaderId);
-
-        // TODO: コンパイルエラーをチェックするコードを入れる
 
         // プログラムオブジェクトの作成
         int programId = GLES20.glCreateProgram();

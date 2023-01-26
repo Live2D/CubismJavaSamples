@@ -7,8 +7,7 @@
 
 package com.live2d.demo;
 
-
-import com.live2d.sdk.cubism.framework.CubismFramework;
+import com.live2d.sdk.cubism.framework.CubismFrameworkConfig.LogLevel;
 
 /**
  * Constants used in this sample app.
@@ -241,7 +240,7 @@ public class LAppDefine {
     /**
      * Setting the level of the log output from the Framework.
      */
-    public static final CubismFramework.Option.LogLevel cubismLoggingLevel = CubismFramework.Option.LogLevel.VERBOSE;
+    public static final LogLevel cubismLoggingLevel = LogLevel.VERBOSE;
     /**
      * Enable/Disable premultiplied alpha.
      */

@@ -123,8 +123,6 @@ public class LAppLive2DManager {
                 }
 
                 model.startRandomMotion(MotionGroup.TAP_BODY.getId(), Priority.NORMAL.getPriority(), finishedMotion);
-
-                // play sound file
             }
         }
     }
@@ -164,22 +162,6 @@ public class LAppLive2DManager {
          * ここでUSE_RENDER_TARGET、USE_MODEL_RENDER_TARGETが定義されている場合
          * 別のレンダリングターゲットにモデルを描画し、描画結果をテクスチャとして別のスプライトに張り付ける。
          */
-//        LAppView.RenderingTarget useRenderingTarget;
-//        switch(LAppDelegate.getInstance().getView().getRenderingTarget()){
-//            case NONE:
-//                useRenderingTarget = LAppView.RenderingTarget.NONE;
-//                break;
-//            case MODEL_FRAME_BUFFER:
-//                // 各LAppModelの持つターゲットに描画を行う場合こちらを選択
-//                useRenderingTarget = LAppView.RenderingTarget.MODEL_FRAME_BUFFER;
-//                break;
-//            case VIEW_FRAME_BUFFER:
-//                // 各LAppViewの持つターゲットに描画を行う場合こちらを選択
-//                useRenderingTarget = LAppView.RenderingTarget.VIEW_FRAME_BUFFER;
-//                break;
-//            default:
-//                useRenderingTarget = LAppView.RenderingTarget.NONE;
-//        }
         LAppView.RenderingTarget useRenderingTarget;
         if (USE_RENDER_TARGET) {
             // LAppViewの持つターゲットに描画を行う場合こちらを選択
