@@ -24,6 +24,15 @@ public class LAppMinimumDelegate {
         return s_instance;
     }
 
+    /**
+     * クラスのインスタンス（シングルトン）を解放する。
+     */
+    public static void releaseInstance() {
+        if (s_instance != null) {
+            s_instance = null;
+        }
+    }
+
     public void onStart(Activity activity) {
         textureManager = new LAppMinimumTextureManager();
         view = new LAppMinimumView();
@@ -45,7 +54,7 @@ public class LAppMinimumDelegate {
     }
 
     public void onDestroy() {
-
+        releaseInstance();
     }
 
     public void onSurfaceCreated() {
@@ -151,7 +160,6 @@ public class LAppMinimumDelegate {
                 "varying vec2 vuv;" +
                 "uniform vec4 baseColor;" +
                 "void main(void){" +
-//                        "gl_FragColor = texture2D(texture, vuv) * baseColor;" +
                 "gl_FragColor = texture2D(texture, vuv);" +
                 "}";
 

@@ -44,9 +44,7 @@ public class LAppView {
         float ratio = (float) width / (float) height;
         float left = -ratio;
         float right = ratio;
-//        float bottom = VIEW_LOGICAL_LEFT;
         float bottom = LogicalView.LEFT.getValue();
-//        float top = VIEW_LOGICAL_RIGHT;
         float top = LogicalView.RIGHT.getValue();
 
         // デバイスに対応する画面範囲。Xの左端、Xの右端、Yの下端、Yの上端

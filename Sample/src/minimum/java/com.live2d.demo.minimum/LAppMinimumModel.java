@@ -20,10 +20,9 @@ import com.live2d.sdk.cubism.framework.motion.ACubismMotion;
 import com.live2d.sdk.cubism.framework.motion.CubismExpressionMotion;
 import com.live2d.sdk.cubism.framework.motion.CubismMotion;
 import com.live2d.sdk.cubism.framework.motion.IFinishedMotionCallback;
+import com.live2d.sdk.cubism.framework.rendering.CubismRenderer;
 import com.live2d.sdk.cubism.framework.rendering.android.CubismOffscreenSurfaceAndroid;
 import com.live2d.sdk.cubism.framework.rendering.android.CubismRendererAndroid;
-import com.live2d.sdk.cubism.framework.utils.jsonparser.CubismJsonString;
-import com.live2d.sdk.cubism.framework.utils.jsonparser.ACubismJsonValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,7 +49,11 @@ public class LAppMinimumModel extends CubismUserModel {
 
         // Setup model
         setupModel(filePath);
-        createRenderer(RendererType.ANDROID);
+
+        // Setup renderer.
+        CubismRenderer renderer = CubismRendererAndroid.create();
+        setupRenderer(renderer);
+
         setupTextures();
     }
 
@@ -125,7 +128,6 @@ public class LAppMinimumModel extends CubismUserModel {
         }
 
         // Physics Setting
-//        _physics.ifPresent(p -> p.evaluate(_model, deltaTimeSeconds));
         if (physics != null) {
             physics.evaluate(model, deltaTimeSeconds);
         }
@@ -181,7 +183,6 @@ public class LAppMinimumModel extends CubismUserModel {
         String name = group + "_" + number;
 
         CubismMotion motion = (CubismMotion) motions.get(name);
-        boolean isAutoDelete = false;
 
         if (motion == null) {
             if (fileName.equals("")) {
@@ -203,8 +204,6 @@ public class LAppMinimumModel extends CubismUserModel {
                     if (fadeOutTime != -1.0f) {
                         motion.setFadeOutTime(fadeOutTime);
                     }
-
-                    isAutoDelete = true;    // 終了時にメモリから削除
                 }
             }
         } else {
@@ -318,7 +317,7 @@ public class LAppMinimumModel extends CubismUserModel {
 
 
         // Set layout
-        Map<CubismJsonString, Float> layout = new HashMap<CubismJsonString, Float>();
+        Map<String, Float> layout = new HashMap<String, Float>();
         this.modelSetting.getLayoutMap(layout);
 
         // If layout information exists, the model matrix is set up from it.
@@ -329,9 +328,8 @@ public class LAppMinimumModel extends CubismUserModel {
         model.saveParameters();
 
         // Load motions
-        Map<CubismJsonString, ACubismJsonValue> map = this.modelSetting.getMotionMap();
-        for (Map.Entry<CubismJsonString, ACubismJsonValue> entry : map.entrySet()) {
-            final String group = entry.getKey().getString();
+        for (int i = 0; i < modelSetting.getMotionGroupCount(); i++) {
+            String group = modelSetting.getMotionGroupName(i);
             preLoadMotionGroup(group);
         }
 

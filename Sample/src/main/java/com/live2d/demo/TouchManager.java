@@ -229,7 +229,6 @@ public class TouchManager {
     private boolean isTouchSingle;
     /**
      * フリップが有効かどうか
-     * // TODO: フリックの間違い？
      */
     private boolean isFlipAvailable;
 }

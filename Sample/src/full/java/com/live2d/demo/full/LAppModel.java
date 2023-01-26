@@ -22,9 +22,9 @@ import com.live2d.sdk.cubism.framework.motion.ACubismMotion;
 import com.live2d.sdk.cubism.framework.motion.CubismExpressionMotion;
 import com.live2d.sdk.cubism.framework.motion.CubismMotion;
 import com.live2d.sdk.cubism.framework.motion.IFinishedMotionCallback;
+import com.live2d.sdk.cubism.framework.rendering.CubismRenderer;
 import com.live2d.sdk.cubism.framework.rendering.android.CubismOffscreenSurfaceAndroid;
 import com.live2d.sdk.cubism.framework.rendering.android.CubismRendererAndroid;
-import com.live2d.sdk.cubism.framework.utils.jsonparser.CubismJsonString;
 
 import java.util.*;
 
@@ -65,7 +65,10 @@ public class LAppModel extends CubismUserModel {
             return;
         }
 
-        createRenderer(RendererType.ANDROID);
+        // Setup renderer.
+        CubismRenderer renderer = CubismRendererAndroid.create();
+        setupRenderer(renderer);
+
         setupTextures();
     }
 
@@ -200,7 +203,6 @@ public class LAppModel extends CubismUserModel {
         String name = group + "_" + number;
 
         CubismMotion motion = (CubismMotion) motions.get(name);
-        boolean isAutoDelete = false;
 
         if (motion == null) {
             String fileName = modelSetting.getMotionFileName(group, number);
@@ -224,7 +226,6 @@ public class LAppModel extends CubismUserModel {
                     }
 
                     motion.setEffectIds(eyeBlinkIds, lipSyncIds);
-                    isAutoDelete = true;    // 終了時にメモリから削除
                 }
             }
         } else {
@@ -476,7 +477,7 @@ public class LAppModel extends CubismUserModel {
         }
 
         // Set layout
-        Map<CubismJsonString, Float> layout = new HashMap<CubismJsonString, Float>();
+        Map<String, Float> layout = new HashMap<String, Float>();
 
         // レイアウト情報が存在すればその情報からモデル行列をセットアップする
         if (modelSetting.getLayoutMap(layout)) {
@@ -632,6 +633,4 @@ public class LAppModel extends CubismUserModel {
      * フレームバッファ以外の描画先
      */
     private final CubismOffscreenSurfaceAndroid renderingBuffer = new CubismOffscreenSurfaceAndroid();
-
-
 }

@@ -57,19 +57,19 @@ Please refer to [CHANGELOG.md](CHANGELOG.md) for the changelog of this repositor
 
 ## Development environment
 
-| Development Tools | Version          |
-|-------------------|------------------|
-| Android Studio    | Dolphin 2021.3.1 Patch 1 |
-| IntelliJ IDEA     | 2022.3           |
-| CMake             | 3.1.0            |
-| Gradle            | 6.9              |
+| Development Tools | Version |
+|-------------------|--|
+| Android Studio    | Electric Eel 2022.1.1 |
+| IntelliJ IDEA     | 2022.3.1 |
+| CMake             | 3.1.0 |
+| Gradle            | 6.9 |
 
 ### Android
 
 | Android SDK tools | Version      |
 | --- |--------------|
 | Android NDK | 21.4.7075529 |
-| Android SDK | 31.0.0       |
+| Android SDK | 33.0.0       |
 | CMake | 3.1.0        |
 
 ## Operation environment
@@ -80,11 +80,11 @@ This sample application runs with **Java SE 6** or higher Java versions.
 
 ### Android
 
-| Version | Device            | Tegra |
-|---------|-------------------| --- |
-| 12      | Redmi Note 10 Pro ||
-| 7.1.1   | Nexus 9           | ✔︎ |
-| 4.1   | Pixel 5           ||
+| Version | Device   | Tegra |
+|---------|----------| --- |
+| 13      | Pixel 6a ||
+| 7.1.1   | Nexus 9  | ✔︎ |
+| 4.1   | Pixel 5  ||
 
 This sample application runs with **Android API 16** or higher Android versions.
 
