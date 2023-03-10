@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [4-r.1-beta.3] - 2023-03-10
+
+### Added
+
+* Add funciton to validate MOC3 files.
+  * See `CHANGELOG.md` in Core and Framework.
+
 ## [4-r.1-beta.2] - 2023-01-26
 
 ### Changed
@@ -38,5 +45,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * New released!
 
+[4-r.1-beta.3]: https://github.com/Live2D/CubismJavaSamples/compare/4-r.1-beta.2...4-r.1-beta.3
 [4-r.1-beta.2]: https://github.com/Live2D/CubismJavaSamples/compare/4-r.1-beta.1...4-r.1-beta.2
 [4-r.1-beta.1]: https://github.com/Live2D/CubismJavaSamples/compare/4-r.1-alpha.1...4-r.1-beta.1
