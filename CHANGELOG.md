@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [4-r.1] - 2023-05-25
+
+### Added
+
+* Add some functions for checking consistency of MOC3 files.
+  * Add the function of checking consistency in `setupModel()` in `LAppModel` and `LAppMinimumModel`.
+  * Add the function of checking consistency before loading a model. (`hasMocConsistencyFromFile()` in `LAppModel` and `LAppMinimumModel`)
+  * This feature is enabled by default. Please see the following manual for more information.
+    * https://docs.live2d.com/cubism-sdk-manual/moc3-consistency/
+
+### Changed
+
+* Change so that when `USE_MODEL_RENDER_TARGET` is defined, one model will apply the opacity obtained from the motion.
+
+### Removed
+
+* Remove unnecessary files in the assets folder.
+
+### Fixed
+
+* Fix a problem in which `haru` motion and voice were incorrect combination.
+* Fix a problem in `LAppWavFileHandler`class that some audio could not be played correctly because the sampling rate was the fixed value.
+
 ## [4-r.1-beta.4] - 2023-03-16
 
 ### Fixed
@@ -52,6 +75,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * New released!
 
+[4-r.1]: https://github.com/Live2D/CubismJavaSamples/compare/4-r.1-beta.4...4-r.1
 [4-r.1-beta.4]: https://github.com/Live2D/CubismJavaSamples/compare/4-r.1-beta.3...4-r.1-beta.4
 [4-r.1-beta.3]: https://github.com/Live2D/CubismJavaSamples/compare/4-r.1-beta.2...4-r.1-beta.3
 [4-r.1-beta.2]: https://github.com/Live2D/CubismJavaSamples/compare/4-r.1-beta.1...4-r.1-beta.2

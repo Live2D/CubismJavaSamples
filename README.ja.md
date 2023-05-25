@@ -59,8 +59,8 @@ Android Studioでプロジェクトを開きビルドすることを推奨しま
 
 | 開発ツール          | バージョン            |
 |----------------|------------------|
-| Android Studio | Electric Eel 2022.1.1 |
-| IntelliJ IDEA  | 2022.3.1         |
+| Android Studio | Flamingo 2022.2.1 Patch 1 |
+| IntelliJ IDEA  | 2023.1.1         |
 | CMake          | 3.1.0            |
 | Gradle         | 6.9              |
 

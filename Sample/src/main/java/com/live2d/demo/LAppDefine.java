@@ -230,6 +230,11 @@ public class LAppDefine {
     }
 
     /**
+     * MOC3の整合性を検証するかどうか。有効ならtrue。
+     */
+    public static final boolean MOC_CONSISTENCY_VALIDATION_ENABLE = true;
+
+    /**
      * Enable/Disable debug logging.
      */
     public static final boolean DEBUG_LOG_ENABLE = true;
