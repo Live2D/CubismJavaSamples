@@ -15,6 +15,7 @@ import com.live2d.sdk.cubism.framework.ICubismModelSetting;
 import com.live2d.sdk.cubism.framework.id.CubismId;
 import com.live2d.sdk.cubism.framework.id.CubismIdManager;
 import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
+import com.live2d.sdk.cubism.framework.model.CubismMoc;
 import com.live2d.sdk.cubism.framework.model.CubismUserModel;
 import com.live2d.sdk.cubism.framework.motion.ACubismMotion;
 import com.live2d.sdk.cubism.framework.motion.CubismExpressionMotion;
@@ -23,6 +24,7 @@ import com.live2d.sdk.cubism.framework.motion.IFinishedMotionCallback;
 import com.live2d.sdk.cubism.framework.rendering.CubismRenderer;
 import com.live2d.sdk.cubism.framework.rendering.android.CubismOffscreenSurfaceAndroid;
 import com.live2d.sdk.cubism.framework.rendering.android.CubismRendererAndroid;
+import com.live2d.sdk.cubism.framework.utils.CubismDebug;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -232,6 +234,30 @@ public class LAppMinimumModel extends CubismUserModel {
         return renderingBuffer;
     }
 
+    /**
+     * .moc3ファイルの整合性をチェックする。
+     *
+     * @param mocFileName MOC3ファイル名
+     * @return MOC3に整合性があるかどうか。整合性があればtrue。
+     */
+    public boolean hasMocConsistencyFromFile(String mocFileName) {
+        assert mocFileName != null && !mocFileName.isEmpty();
+
+        String path = mocFileName;
+        path = modelHomeDirectory + path;
+
+        byte[] buffer = LAppMinimumPal.loadFileAsBytes(path);
+        boolean consistency = CubismMoc.hasMocConsistency(buffer);
+
+        if (!consistency) {
+            CubismDebug.cubismLogInfo("Inconsistent MOC3.");
+        } else {
+            CubismDebug.cubismLogInfo("Consistent MOC3.");
+        }
+
+        return consistency;
+    }
+
     // model3.jsonからモデルを生成する
     private boolean setupModel(String model3JsonPath) {
         byte[] model3Json = LAppMinimumPal.loadFileAsBytes(model3JsonPath);
@@ -258,7 +284,7 @@ public class LAppMinimumModel extends CubismUserModel {
                 String modelPath = modelHomeDirectory + path;
                 byte[] buffer = LAppMinimumPal.loadFileAsBytes(modelPath);
 
-                loadModel(buffer);
+                loadModel(buffer, mocConsistency);
             }
         }
 

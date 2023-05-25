@@ -17,6 +17,7 @@ import com.live2d.sdk.cubism.framework.effect.CubismEyeBlink;
 import com.live2d.sdk.cubism.framework.id.CubismId;
 import com.live2d.sdk.cubism.framework.id.CubismIdManager;
 import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
+import com.live2d.sdk.cubism.framework.model.CubismMoc;
 import com.live2d.sdk.cubism.framework.model.CubismUserModel;
 import com.live2d.sdk.cubism.framework.motion.ACubismMotion;
 import com.live2d.sdk.cubism.framework.motion.CubismExpressionMotion;
@@ -25,11 +26,20 @@ import com.live2d.sdk.cubism.framework.motion.IFinishedMotionCallback;
 import com.live2d.sdk.cubism.framework.rendering.CubismRenderer;
 import com.live2d.sdk.cubism.framework.rendering.android.CubismOffscreenSurfaceAndroid;
 import com.live2d.sdk.cubism.framework.rendering.android.CubismRendererAndroid;
+import com.live2d.sdk.cubism.framework.utils.CubismDebug;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class LAppModel extends CubismUserModel {
     public LAppModel() {
+        if (LAppDefine.MOC_CONSISTENCY_VALIDATION_ENABLE) {
+            mocConsistency = true;
+        }
+
         if (LAppDefine.DEBUG_LOG_ENABLE) {
             debugMode = true;
         }
@@ -106,6 +116,9 @@ public class LAppModel extends CubismUserModel {
 
         // モデルの状態を保存
         model.saveParameters();
+
+        // 不透明度
+        opacity = model.getModelOpacity();
 
         // eye blink
         // メインモーションの更新がないときだけまばたきする
@@ -363,6 +376,30 @@ public class LAppModel extends CubismUserModel {
         return renderingBuffer;
     }
 
+    /**
+     * .moc3ファイルの整合性をチェックする。
+     *
+     * @param mocFileName MOC3ファイル名
+     * @return MOC3に整合性があるかどうか。整合性があればtrue。
+     */
+    public boolean hasMocConsistencyFromFile(String mocFileName) {
+        assert mocFileName != null && !mocFileName.isEmpty();
+
+        String path = mocFileName;
+        path = modelHomeDirectory + path;
+
+        byte[] buffer = createBuffer(path);
+        boolean consistency = CubismMoc.hasMocConsistency(buffer);
+
+        if (!consistency) {
+            CubismDebug.cubismLogInfo("Inconsistent MOC3.");
+        } else {
+            CubismDebug.cubismLogInfo("Consistent MOC3.");
+        }
+
+        return consistency;
+    }
+
     private static byte[] createBuffer(final String path) {
         if (LAppDefine.DEBUG_LOG_ENABLE) {
             LAppPal.printLog("create buffer: " + path);
@@ -388,7 +425,7 @@ public class LAppModel extends CubismUserModel {
                 }
 
                 byte[] buffer = createBuffer(path);
-                loadModel(buffer);
+                loadModel(buffer, mocConsistency);
             }
         }
 
@@ -575,7 +612,6 @@ public class LAppModel extends CubismUserModel {
             }
         }
     }
-
 
     private ICubismModelSetting modelSetting;
     /**

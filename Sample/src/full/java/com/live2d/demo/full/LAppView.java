@@ -166,11 +166,11 @@ public class LAppView {
             };
 
             for (int i = 0; i < live2dManager.getModelNum(); i++) {
-                // サンプルとしてαに適当な差を付ける。
-                float alpha = getSpriteAlpha(i);
+                LAppModel model = live2dManager.getModel(i);
+                float alpha = i < 1 ? 1.0f : model.getOpacity();    // 片方のみ不透明度を取得できるようにする。
+
                 renderingSprite.setColor(1.0f, 1.0f, 1.0f, alpha);
 
-                LAppModel model = live2dManager.getModel(i);
                 if (model != null) {
                     renderingSprite.renderImmediate(model.getRenderingBuffer().getColorBuffer()[0], uvVertex);
                 }
