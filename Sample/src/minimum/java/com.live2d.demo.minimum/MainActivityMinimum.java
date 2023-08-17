@@ -48,7 +48,6 @@ public class MainActivityMinimum extends Activity {
         super.onPause();
 
         _glSurfaceView.onPause();
-        LAppMinimumDelegate.getInstance().onPause();
     }
 
     @Override

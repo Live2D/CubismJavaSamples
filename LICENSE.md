@@ -53,6 +53,7 @@ Sample/src/main/assets/Mao
 Sample/src/main/assets/Mark
 Sample/src/main/assets/Natori
 Sample/src/main/assets/Rice
+Sample/src/main/assets/Wanko
 ```
 
 If you use these models, you must agree to the terms of a contract set [here](https://docs.live2d.com/cubism-editor-manual/sample-model/) for each model.

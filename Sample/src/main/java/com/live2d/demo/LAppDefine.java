@@ -138,35 +138,6 @@ public class LAppDefine {
     }
 
     /**
-     * Model directory name.
-     */
-    public enum ModelDir {
-        HARU(0, "Haru"),
-        HIYORI(1, "Hiyori"),
-        MARK(2, "Mark"),
-        NATORI(3, "Natori"),
-        RICE(4, "Rice"),
-        MAO(5, "Mao");
-
-        private final int order;
-        private final String dirName;
-
-        ModelDir(int order, String dirName) {
-            this.order = order;
-            this.dirName = dirName;
-        }
-
-        public int getOrder() {
-            return order;
-        }
-
-        public String getDirName() {
-            return dirName;
-        }
-
-    }
-
-    /**
      * Motion group
      */
     public enum MotionGroup {

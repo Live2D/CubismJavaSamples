@@ -4,12 +4,20 @@
 
 # Cubism Java Samples
 
-Live2D Cubism 4 Editor で出力したモデルを表示するアプリケーションのサンプル実装です。
+Live2D Cubism Editor で出力したモデルを表示するアプリケーションのサンプル実装です。
 Cubism Java Framework および Live2D Cubism Core Javaと組み合わせて使用します。
 
 ## ライセンス
 
 本 SDK を使用する前に[ライセンス](LICENSE.md)をご確認ください。
+
+
+## Cubism 5新機能や過去バージョンとの互換性について
+
+本 SDK はCubism 5に対応した製品です。
+Cubism 5 Editorに搭載された新機能のSDK対応については [こちら](https://docs.live2d.com/cubism-sdk-manual/cubism-5-new-functions/)をご確認ください。
+過去バージョンのCubism SDKとの互換性については [こちら](https://docs.live2d.com/cubism-sdk-manual/compatibility-with-cubism-5/)をご確認ください。
+
 
 ## ディレクトリ構成
 
@@ -59,10 +67,9 @@ Android Studioでプロジェクトを開きビルドすることを推奨しま
 
 | 開発ツール          | バージョン            |
 |----------------|------------------|
-| Android Studio | Flamingo 2022.2.1 Patch 1 |
-| IntelliJ IDEA  | 2023.1.1         |
+| Android Studio | Giraffe 2022.3.1 |
 | CMake          | 3.1.0            |
-| Gradle         | 6.9              |
+| Gradle         | 8.1.1              |
 
 ### Android
 
@@ -76,7 +83,7 @@ Android Studioでプロジェクトを開きビルドすることを推奨しま
 
 ### Java
 
-本サンプルアプリケーションは**Java SE 6**以上のJavaバージョンで動作します。
+本サンプルアプリケーションは**Java SE 7**以上のJavaバージョンで動作します。
 
 ### Android
 | バージョン | デバイス     | Tegra |
@@ -85,7 +92,7 @@ Android Studioでプロジェクトを開きビルドすることを推奨しま
 | 7.1.1 | Nexus 9  | ✔ |
 | 4.1   | Pixel 5  |  |
 
-本サンプルアプリケーションは**Android API 16**以上のAndroidバージョンで動作します。
+本サンプルアプリケーションは**Android API 21**以上のAndroidバージョンで動作します。
 
 ## プロジェクトへの貢献
 

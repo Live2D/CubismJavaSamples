@@ -11,7 +11,6 @@ import android.app.Activity;
 import android.opengl.GLES20;
 import android.os.Build;
 import com.live2d.demo.LAppDefine;
-import com.live2d.demo.LAppDefine.ModelDir;
 import com.live2d.sdk.cubism.framework.CubismFramework;
 
 import static android.opengl.GLES20.*;
@@ -93,7 +92,7 @@ public class LAppDelegate {
 
         // load models
         if (LAppLive2DManager.getInstance().getCurrentModel() != currentModel) {
-            LAppLive2DManager.getInstance().changeScene(currentModel.getOrder());
+            LAppLive2DManager.getInstance().changeScene(currentModel);
         }
 
         isActive = true;
@@ -220,7 +219,7 @@ public class LAppDelegate {
     private static LAppDelegate s_instance;
 
     private LAppDelegate() {
-        currentModel = ModelDir.values()[0];
+        currentModel = 0;
 
         // Set up Cubism SDK framework.
         cubismOption.logFunction = new LAppPal.PrintLogFunction();
@@ -243,7 +242,7 @@ public class LAppDelegate {
     /**
      * モデルシーンインデックス
      */
-    private ModelDir currentModel;
+    private int currentModel;
 
     /**
      * クリックしているか
