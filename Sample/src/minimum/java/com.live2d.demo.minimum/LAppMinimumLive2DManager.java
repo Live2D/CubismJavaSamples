@@ -7,7 +7,6 @@
 
 package com.live2d.demo.minimum;
 
-import com.live2d.demo.LAppDefine;
 import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
 
 /**
@@ -26,10 +25,10 @@ public class LAppMinimumLive2DManager {
         s_instance = null;
     }
 
-    public void loadModel(LAppDefine.ModelDir modelDirectoryName) {
-        String dir = modelDirectoryName.getDirName() + "/";
+    public void loadModel(String modelDirectoryName) {
+        String dir = modelDirectoryName + "/";
         model = new LAppMinimumModel(dir);
-        model.loadAssets(dir, modelDirectoryName.getDirName() + ".model3.json");
+        model.loadAssets(dir, modelDirectoryName + ".model3.json");
     }
 
     // モデル更新処理及び描画処理を行う
@@ -77,30 +76,16 @@ public class LAppMinimumLive2DManager {
     }
 
     /**
-     * シーンインデックスを返す
-     *
-     * @return シーンインデックス
-     */
-    public LAppDefine.ModelDir getCurrentModel() {
-        return currentModel;
-    }
-
-    /**
      * シングルトンインスタンス
      */
     private static LAppMinimumLive2DManager s_instance;
 
     private LAppMinimumLive2DManager() {
-        currentModel = LAppDefine.ModelDir.values()[1];
-
-        loadModel(currentModel);
+        loadModel("Hiyori");
     }
 
     private LAppMinimumModel model;
-    /**
-     * 表示するシーンのインデックス値
-     */
-    private final LAppDefine.ModelDir currentModel;
+
     private final CubismMatrix44 viewMatrix = CubismMatrix44.create();
     private final CubismMatrix44 projection = CubismMatrix44.create();
 }

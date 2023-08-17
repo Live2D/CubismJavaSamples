@@ -4,13 +4,21 @@
 
 # Cubism Java Samples
 
-This is a sample implementation of an application that displays models output by the Live2D Cubism 4 Editor.
+This is a sample implementation of an application that displays models output by the Live2D Cubism Editor.
 
 It is used in conjunction with Cubism Java Framework and Live2D Cubism Core Java.
 
 ## License
 
 Please check the [license](LICENSE.md) before using this SDK.
+
+
+## Compatibility with Cubism 5 new features and previous Cubism SDK versions
+
+This SDK is compatible with Cubism 5.
+For SDK compatibility with new features in Cubism 5 Editor, please refer to [here](https://docs.live2d.com/en/cubism-sdk-manual/cubism-5-new-functions/).
+For compatibility with previous versions of Cubism SDK, please refer to [here](https://docs.live2d.com/en/cubism-sdk-manual/compatibility-with-cubism-5/).
+
 
 ## Directory structure
 
@@ -59,10 +67,9 @@ Please refer to [CHANGELOG.md](CHANGELOG.md) for the changelog of this repositor
 
 | Development Tools | Version |
 |-------------------|--|
-| Android Studio    | Flamingo 2022.2.1 Patch 1 |
-| IntelliJ IDEA     | 2023.1.1 |
+| Android Studio    | Giraffe 2022.3.1 |
 | CMake             | 3.1.0 |
-| Gradle            | 6.9 |
+| Gradle            | 8.1.1 |
 
 ### Android
 
@@ -76,7 +83,7 @@ Please refer to [CHANGELOG.md](CHANGELOG.md) for the changelog of this repositor
 
 ### Java
 
-This sample application runs with **Java SE 6** or higher Java versions.
+This sample application runs with **Java SE 7** or higher Java versions.
 
 ### Android
 
@@ -86,7 +93,7 @@ This sample application runs with **Java SE 6** or higher Java versions.
 | 7.1.1   | Nexus 9  | ✔︎ |
 | 4.1   | Pixel 5  ||
 
-This sample application runs with **Android API 16** or higher Android versions.
+This sample application runs with **Android API 21** or higher Android versions.
 
 ## Contributing
 

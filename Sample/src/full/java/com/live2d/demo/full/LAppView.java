@@ -184,7 +184,7 @@ public class LAppView {
      * @param refModel モデルデータ
      */
     public void preModelDraw(LAppModel refModel) {
-        // 別のレンダリングターゲットへ向けて描画する場合の使用するフレームバッファ
+        // 別のレンダリングターゲットへ向けて描画する場合の使用するオフスクリーンサーフェス
         CubismOffscreenSurfaceAndroid useTarget;
 
         // 別のレンダリングターゲットへ向けて描画する場合
@@ -201,7 +201,7 @@ public class LAppView {
                 int height = LAppDelegate.getInstance().getWindowHeight();
 
                 // モデル描画キャンバス
-                useTarget.createOffscreenFrame((int) width, (int) height, null);
+                useTarget.createOffscreenSurface((int) width, (int) height, null);
             }
             // レンダリング開始
             useTarget.beginDraw(null);

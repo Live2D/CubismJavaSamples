@@ -11,8 +11,12 @@ import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
 import com.live2d.sdk.cubism.framework.motion.ACubismMotion;
 import com.live2d.sdk.cubism.framework.motion.IFinishedMotionCallback;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import android.content.res.AssetManager;
 
 import static com.live2d.demo.LAppDefine.*;
 
@@ -40,6 +44,34 @@ public class LAppLive2DManager {
             model.deleteModel();
         }
         models.clear();
+    }
+
+    /**
+     * assets フォルダにあるモデルフォルダ名をセットする
+     */
+    public void setUpModel() {
+        // assetsフォルダの中にあるフォルダ名を全てクロールし、モデルが存在するフォルダを定義する。
+        // フォルダはあるが同名の.model3.jsonが見つからなかった場合はリストに含めない。
+        modelDir.clear();
+
+        final AssetManager assets = LAppDelegate.getInstance().getActivity().getResources().getAssets();
+        try {
+            String[] root = assets.list("");
+            for (String subdir: root) {
+                String[] files = assets.list(subdir);
+                String target = subdir + ".model3.json";
+                // フォルダと同名の.model3.jsonがあるか探索する
+                for (String file : files) {
+                    if (file.equals(target)) {
+                        modelDir.add(subdir);
+                        break;
+                    }
+                }
+            }
+            Collections.sort(modelDir);
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     // モデル更新処理及び描画処理を行う
@@ -132,7 +164,7 @@ public class LAppLive2DManager {
      * サンプルアプリケーションではモデルセットの切り替えを行う
      */
     public void nextScene() {
-        final int number = (currentModel.getOrder() + 1) % ModelDir.values().length;
+        final int number = (currentModel + 1) % modelDir.size();
 
         changeScene(number);
     }
@@ -143,14 +175,15 @@ public class LAppLive2DManager {
      * @param index 切り替えるシーンインデックス
      */
     public void changeScene(int index) {
-        currentModel = ModelDir.values()[index];
+        currentModel = index;
         if (DEBUG_LOG_ENABLE) {
-            LAppPal.printLog("model index: " + currentModel.getOrder());
+            LAppPal.printLog("model index: " + currentModel);
         }
 
-        String modelDirName = currentModel.getDirName();
+        String modelDirName = modelDir.get(index);
+
         String modelPath = ResourcePath.ROOT.getPath() + modelDirName + "/";
-        String modelJsonName = currentModel.getDirName() + ".model3.json";
+        String modelJsonName = modelDirName + ".model3.json";
 
         releaseAllModel();
 
@@ -207,7 +240,7 @@ public class LAppLive2DManager {
      *
      * @return シーンインデックス
      */
-    public ModelDir getCurrentModel() {
+    public int getCurrentModel() {
         return currentModel;
     }
 
@@ -241,16 +274,21 @@ public class LAppLive2DManager {
     private static LAppLive2DManager s_instance;
 
     private LAppLive2DManager() {
-        currentModel = ModelDir.values()[0];
-        changeScene(currentModel.getOrder());
+        setUpModel();
+        changeScene(0);
     }
 
-    private final List<LAppModel> models = new ArrayList<LAppModel>();
+    private final List<LAppModel> models = new ArrayList<>();
 
     /**
      * 表示するシーンのインデックス値
      */
-    private ModelDir currentModel;
+    private int currentModel;
+
+    /**
+     * モデルディレクトリ名
+     */
+    private final List<String> modelDir = new ArrayList<>();
 
     // onUpdateメソッドで使用されるキャッシュ変数
     private final CubismMatrix44 viewMatrix = CubismMatrix44.create();

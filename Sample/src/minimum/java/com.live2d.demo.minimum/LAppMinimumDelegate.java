@@ -11,7 +11,6 @@ import android.app.Activity;
 import android.opengl.GLES20;
 import android.os.Build;
 import com.live2d.demo.LAppDefine;
-import com.live2d.demo.LAppDefine.ModelDir;
 import com.live2d.sdk.cubism.framework.CubismFramework;
 
 import static android.opengl.GLES20.*;
@@ -47,10 +46,6 @@ public class LAppMinimumDelegate {
 
         LAppMinimumLive2DManager.releaseInstance();
         CubismFramework.dispose();
-    }
-
-    public void onPause() {
-        currentModel = LAppMinimumLive2DManager.getInstance().getCurrentModel();
     }
 
     public void onDestroy() {
@@ -203,8 +198,6 @@ public class LAppMinimumDelegate {
 
 
     private LAppMinimumDelegate() {
-        currentModel = ModelDir.values()[0];
-
         // Set up Cubism SDK framework.
         cubismOption.logFunction = new LAppMinimumPal.PrintLogFunction();
         cubismOption.loggingLevel = LAppDefine.cubismLoggingLevel;
@@ -223,11 +216,6 @@ public class LAppMinimumDelegate {
     private int windowWidth;
     private int windowHeight;
     private boolean isActive;
-
-    /**
-     * モデルシーンインデックス
-     */
-    private ModelDir currentModel;
 
     /**
      * クリックしているか
