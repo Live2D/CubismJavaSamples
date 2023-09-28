@@ -99,7 +99,7 @@ public class LAppLive2DManager {
 
             // 必要があればここで乗算する
             if (viewMatrix != null) {
-                projection.multiplyByMatrix(viewMatrix);
+                viewMatrix.multiplyByMatrix(projection);
             }
 
             // モデル1体描画前コール

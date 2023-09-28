@@ -297,7 +297,12 @@ public class LAppModel extends CubismUserModel {
             return;
         }
 
-        matrix.multiplyByMatrix(modelMatrix);
+        // キャッシュ変数の定義を避けるために、multiplyByMatrix()ではなく、multiply()を使用する。
+        CubismMatrix44.multiply(
+            modelMatrix.getArray(),
+            matrix.getArray(),
+            matrix.getArray()
+        );
 
         this.<CubismRendererAndroid>getRenderer().setMvpMatrix(matrix);
         this.<CubismRendererAndroid>getRenderer().drawModel();

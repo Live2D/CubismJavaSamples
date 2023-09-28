@@ -89,7 +89,7 @@ This sample application runs with **Java SE 7** or higher Java versions.
 
 | Version | Device   | Tegra |
 |---------|----------| --- |
-| 13      | Pixel 6a ||
+| 13      | Pixel 7a ||
 | 7.1.1   | Nexus 9  | ✔︎ |
 | 4.1   | Pixel 5  ||
 
@@ -111,9 +111,9 @@ We are regularly checking issue-reports and feature requests at Live2D Community
 
 We're also interested in your feedback for the future of the SDK. You can submit a suggestion or feature request at Live2D Community. To make this process more effective, we're asking that you include more information to help define them more clearly.
 
-## Community
+## Forum
 
-If you would like to make suggestions or ask questions about how to use Cubism SDK among users, please use the community.
+If you want to suggest or ask questions about how to use the Cubism SDK between users, please use the forum.
 
-- [Live2D community](http://community.live2d.com/)
-- [Live2D 公式コミュニティ (Japanese)](https://creatorsforum.live2d.com/)
+- [Live2D Creator's Forum](https://community.live2d.com/)
+- [Live2D 公式クリエイターズフォーラム (Japanese)](https://creatorsforum.live2d.com/)
