@@ -48,7 +48,7 @@ public class LAppMinimumLive2DManager {
 
         // 必要があればここで乗算する
         if (viewMatrix != null) {
-            projection.multiplyByMatrix(viewMatrix);
+            viewMatrix.multiplyByMatrix(projection);
         }
 
         model.update();
