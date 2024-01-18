@@ -67,16 +67,16 @@ Please refer to [CHANGELOG.md](CHANGELOG.md) for the changelog of this repositor
 
 | Development Tools | Version |
 |-------------------|--|
-| Android Studio    | Giraffe 2022.3.1 |
+| Android Studio    | Hedgehog 2023.1.1 |
 | CMake             | 3.1.0 |
-| Gradle            | 8.1.1 |
+| Gradle            | 8.2 |
 
 ### Android
 
 | Android SDK tools | Version      |
 | --- |--------------|
 | Android NDK | 21.4.7075529 |
-| Android SDK | 33.0.0       |
+| Android SDK | 34.0.0       |
 | CMake | 3.1.0        |
 
 ## Operation environment
@@ -89,7 +89,7 @@ This sample application runs with **Java SE 7** or higher Java versions.
 
 | Version | Device   | Tegra |
 |---------|----------| --- |
-| 13      | Pixel 7a ||
+| 14     | Pixel 7a ||
 | 7.1.1   | Nexus 9  | ✔︎ |
 | 4.1   | Pixel 5  ||
 

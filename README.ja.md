@@ -67,16 +67,16 @@ Android Studioでプロジェクトを開きビルドすることを推奨しま
 
 | 開発ツール          | バージョン            |
 |----------------|------------------|
-| Android Studio | Giraffe 2022.3.1 |
+| Android Studio | Hedgehog 2023.1.1 |
 | CMake          | 3.1.0            |
-| Gradle         | 8.1.1              |
+| Gradle         | 8.2           |
 
 ### Android
 
 | Android SDK tools | バージョン        |
 | --- |--------------|
 | Android NDK | 21.4.7075529 |
-| Android SDK | 33.0.0       |
+| Android SDK | 34.0.0       |
 | CMake | 3.1.0        |
 
 ## 動作確認環境
@@ -88,7 +88,7 @@ Android Studioでプロジェクトを開きビルドすることを推奨しま
 ### Android
 | バージョン | デバイス     | Tegra |
 |-------|----------|-------|
-| 13    | Pixel 7a |  |
+| 14   | Pixel 7a |  |
 | 7.1.1 | Nexus 9  | ✔ |
 | 4.1   | Pixel 5  |  |
 
