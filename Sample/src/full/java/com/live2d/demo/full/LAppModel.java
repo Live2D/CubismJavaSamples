@@ -447,7 +447,9 @@ public class LAppModel extends CubismUserModel {
                     byte[] buffer = createBuffer(path);
                     CubismExpressionMotion motion = loadExpression(buffer);
 
-                    expressions.put(name, motion);
+                    if (motion != null) {
+                        expressions.put(name, motion);
+                    }
                 }
             }
         }

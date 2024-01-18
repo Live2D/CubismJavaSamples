@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [5-r.1-beta.3] - 2024-01-18
+
+### Changed
+
+* Change the compile and target SDK version of Android OS to 14.0 (API 34).
+  * Upgrade the version of Android Gradle Plugin from 8.0.2 to 8.1.1.
+  * Upgrade the version of Gradle from 8.1.1 to 8.2.
+  * Change the minimum version of Android Studio to Hedgehog(2023.1.1).
+
+### Fixed
+
+* Fix a problem where the result loaded exp3.json is put into map even if it was null.
+* Replace deprecated notation in `build.gradle` and `AndroidManifest.xml`.
+
+
 ## [5-r.1-beta.2] - 2023-09-28
 
 ### Changed
@@ -99,6 +114,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * New released!
 
+[5-r.1-beta.3]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.1-beta.2...5-r.1-beta.3
 [5-r.1-beta.2]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.1-beta.1...5-r.1-beta.2
 [5-r.1-beta.1]: https://github.com/Live2D/CubismJavaSamples/compare/4-r.1...5-r.1-beta.1
 [4-r.1]: https://github.com/Live2D/CubismJavaSamples/compare/4-r.1-beta.4...4-r.1
