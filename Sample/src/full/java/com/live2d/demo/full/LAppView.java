@@ -14,7 +14,7 @@ import com.live2d.sdk.cubism.framework.rendering.android.CubismOffscreenSurfaceA
 
 import static com.live2d.demo.LAppDefine.*;
 
-public class LAppView {
+public class LAppView implements AutoCloseable {
     /**
      * LAppModelのレンダリング先
      */
@@ -31,9 +31,9 @@ public class LAppView {
         clearColor[3] = 0.0f;
     }
 
-    // シェーダーを初期化する
-    public void initializeShader() {
-        programId = LAppDelegate.getInstance().createShader();
+    @Override
+    public void close() {
+        spriteShader.close();
     }
 
     // ビューを初期化する
@@ -74,6 +74,8 @@ public class LAppView {
             MaxLogicalView.BOTTOM.getValue(),
             MaxLogicalView.TOP.getValue()
         );
+
+        spriteShader = new LAppSpriteShader();
     }
 
     // 画像を初期化する
@@ -92,6 +94,8 @@ public class LAppView {
         float y = windowHeight * 0.5f;
         float fWidth = backgroundTexture.width * 2.0f;
         float fHeight = windowHeight * 0.95f;
+
+        int programId = spriteShader.getShaderId();
 
         if (backSprite == null) {
             backSprite = new LAppSprite(x, y, fWidth, fHeight, backgroundTexture.id, programId);
@@ -142,6 +146,14 @@ public class LAppView {
 
     // 描画する
     public void render() {
+        // 画面サイズを取得する。
+        int maxWidth = LAppDelegate.getInstance().getWindowWidth();
+        int maxHeight = LAppDelegate.getInstance().getWindowHeight();
+
+        backSprite.setWindowSize(maxWidth, maxHeight);
+        gearSprite.setWindowSize(maxWidth, maxHeight);
+        powerSprite.setWindowSize(maxWidth, maxHeight);
+
         // UIと背景の描画
         backSprite.render();
         gearSprite.render();
@@ -172,6 +184,7 @@ public class LAppView {
                 renderingSprite.setColor(1.0f, 1.0f, 1.0f, alpha);
 
                 if (model != null) {
+                    renderingSprite.setWindowSize(maxWidth, maxHeight);
                     renderingSprite.renderImmediate(model.getRenderingBuffer().getColorBuffer()[0], uvVertex);
                 }
             }
@@ -236,6 +249,12 @@ public class LAppView {
                     1.0f, 0.0f
                 };
                 renderingSprite.setColor(1.0f, 1.0f, 1.0f, getSpriteAlpha(0));
+
+                // 画面サイズを取得する。
+                int maxWidth = LAppDelegate.getInstance().getWindowWidth();
+                int maxHeight = LAppDelegate.getInstance().getWindowHeight();
+
+                renderingSprite.setWindowSize(maxWidth, maxHeight);
                 renderingSprite.renderImmediate(useTarget.getColorBuffer()[0], uvVertex);
             }
         }
@@ -401,7 +420,6 @@ public class LAppView {
 
     private final CubismMatrix44 deviceToScreen = CubismMatrix44.create(); // デバイス座標からスクリーン座標に変換するための行列
     private final CubismViewMatrix viewMatrix = new CubismViewMatrix();   // 画面表示の拡縮や移動の変換を行う行列
-    private int programId;
     private int windowWidth;
     private int windowHeight;
 
@@ -427,4 +445,9 @@ public class LAppView {
     private boolean isChangedModel;
 
     private final TouchManager touchManager = new TouchManager();
+
+    /**
+     * シェーダー作成委譲クラス
+     */
+    private LAppSpriteShader spriteShader;
 }

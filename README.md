@@ -26,11 +26,11 @@ For compatibility with previous versions of Cubism SDK, please refer to [here](h
 .
 ├─ Core             # Directory containing Live2D Cubism Core Java
 ├─ Framework        # Directory containing source code for rendering and animation functions
-└─ Samples
-   ├─ full      # Full version of sample application
-   ├─ main      # Common code for full and minimum
-      └─ assets # Directory containing resources such as model files and images
-   ├─ minimum   # Sample application with reduced and simplified functions
+└─ Sample/src
+   ├─ full          # Full version of sample application
+   ├─ main          # Common code for full and minimum
+      └─ assets     # Directory containing resources such as model files and images
+   └─ minimum       # Sample application with reduced and simplified functions
 ```
 
 ## Cubism Java Framework
@@ -61,23 +61,19 @@ It is recommended to open and build the project in Android Studio. Other IDEs do
 
 ## Changelog
 
-Please refer to [CHANGELOG.md](CHANGELOG.md) for the changelog of this repository.
+Samples : [CHANGELOG.md](CHANGELOG.md)
+
+Framework : [CHANGELOG.md](Framework/CHANGELOG.md)
+
+Core : [CHANGELOG.md](Core/CHANGELOG.md)
 
 ## Development environment
 
 | Development Tools | Version |
 |-------------------|--|
-| Android Studio    | Hedgehog 2023.1.1 |
-| CMake             | 3.1.0 |
+| Android Studio    | Iguana 2023.2.1 |
 | Gradle            | 8.2 |
-
-### Android
-
-| Android SDK tools | Version      |
-| --- |--------------|
-| Android NDK | 21.4.7075529 |
 | Android SDK | 34.0.0       |
-| CMake | 3.1.0        |
 
 ## Operation environment
 
@@ -101,7 +97,7 @@ There are many ways to contribute to the project: logging bugs, submitting pull 
 
 ### Forking And Pull Requests
 
-We very much appreciate your pull requests, whether they bring fixes, improvements, or even new features. Note, however, that the wrapper is designed to be as lightweight and shallow as possible and should therefore only be subject to bug fixes and memory/performance improvements. To keep the main repository as clean as possible, create a personal fork and feature branches there as needed.
+We very much appreciate your pull requests, whether they bring fixes, improvements, or even new features. To keep the main repository as clean as possible, create a personal fork and feature branches there as needed.
 
 ### Bugs
 

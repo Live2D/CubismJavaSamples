@@ -40,12 +40,6 @@ public class LAppMinimumSprite {
         spriteColor[1] = 1.0f;
         spriteColor[2] = 1.0f;
         spriteColor[3] = 1.0f;
-
-        // this projection matrix is applied to object coordinates
-        // in the onDrawFrame() method
-        int windowWidth = LAppMinimumDelegate.getInstance().getWindowWidth();
-        int windowHeight = LAppMinimumDelegate.getInstance().getWindowHeight();
-        float ratio = (float) windowWidth / (float) windowHeight;
     }
 
     /**
@@ -61,10 +55,6 @@ public class LAppMinimumSprite {
 
         // uniform属性の登録
         GLES20.glUniform1i(textureLocation, 0);
-
-        // 画面サイズを取得する
-        int maxWidth = LAppMinimumDelegate.getInstance().getWindowWidth();
-        int maxHeight = LAppMinimumDelegate.getInstance().getWindowHeight();
 
         // 頂点データ
         float[] positionVertex = {
@@ -101,6 +91,17 @@ public class LAppMinimumSprite {
     }
 
     /**
+     * ウィンドウサイズを設定する。
+     *
+     * @param width 横幅
+     * @param height 高さ
+     */
+    public void setWindowSize(int width, int height) {
+        maxWidth = width;
+        maxHeight = height;
+    }
+
+    /**
      * Rectクラス
      */
     private static final class Rect {
@@ -122,4 +123,7 @@ public class LAppMinimumSprite {
     private final int textureLocation;   // テクスチャアトリビュート
     private final int colorLocation;     // カラーアトリビュート
     private final float[] spriteColor = new float[4];   // 表示カラー
+
+    private int maxWidth;   // ウィンドウ幅
+    private int maxHeight;  // ウィンドウ高さ
 }
