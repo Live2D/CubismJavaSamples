@@ -13,7 +13,7 @@ import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
 import com.live2d.sdk.cubism.framework.math.CubismViewMatrix;
 import com.live2d.sdk.cubism.framework.rendering.android.CubismOffscreenSurfaceAndroid;
 
-public class LAppMinimumView {
+public class LAppMinimumView implements AutoCloseable {
     public LAppMinimumView() {
         clearColor[0] = 1.0f;
         clearColor[1] = 1.0f;
@@ -21,9 +21,9 @@ public class LAppMinimumView {
         clearColor[3] = 0.0f;
     }
 
-    // シェーダーを初期化する
-    public void initializeShader() {
-        programId = LAppMinimumDelegate.getInstance().createShader();
+    @Override
+    public void close() {
+        spriteShader.close();
     }
 
     // ビューを初期化する
@@ -64,6 +64,8 @@ public class LAppMinimumView {
             LAppDefine.LogicalView.BOTTOM.getValue(),
             LAppDefine.MaxLogicalView.TOP.getValue()
         );
+
+        spriteShader = new LAppMinimumSpriteShader();
     }
 
     // 画像を初期化する
@@ -76,7 +78,7 @@ public class LAppMinimumView {
         float y = windowHeight * 0.5f;
 
         if (renderingSprite == null) {
-            renderingSprite = new LAppMinimumSprite(x, y, windowWidth, windowHeight, 0, programId);
+            renderingSprite = new LAppMinimumSprite(x, y, windowWidth, windowHeight, 0, spriteShader.getShaderId());
         } else {
             renderingSprite.resize(x, y, windowWidth, windowHeight);
         }
@@ -159,7 +161,6 @@ public class LAppMinimumView {
 
     private final CubismMatrix44 deviceToScreen = CubismMatrix44.create(); // デバイス座標からスクリーン座標に変換するための行列
     private final CubismViewMatrix viewMatrix = new CubismViewMatrix();   // 画面表示の拡縮や移動の変換を行う行列
-    private int programId;
 
     /**
      * レンダリングターゲットのクリアカラー
@@ -171,4 +172,9 @@ public class LAppMinimumView {
     private LAppMinimumSprite renderingSprite;
 
     private final TouchManager touchManager = new TouchManager();
+
+    /**
+     * シェーダー作成委譲クラス
+     */
+    private LAppMinimumSpriteShader spriteShader;
 }

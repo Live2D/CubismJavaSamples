@@ -41,7 +41,9 @@ public class LAppMinimumDelegate {
     }
 
     public void onStop() {
-        view = null;
+        if (view != null) {
+            view.close();
+        }
         textureManager = null;
 
         LAppMinimumLive2DManager.releaseInstance();
@@ -63,9 +65,6 @@ public class LAppMinimumDelegate {
 
         // Initialize Cubism SDK framework
         CubismFramework.initialize();
-
-        // シェーダーの初期化
-        view.initializeShader();
     }
 
     public void onSurfaceChanged(int width, int height) {
@@ -96,9 +95,7 @@ public class LAppMinimumDelegate {
 
         // アプリケーションを非アクティブにする
         if (!isActive) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                activity.finishAndRemoveTask();
-            }
+            activity.finishAndRemoveTask();
             System.exit(0);
         }
     }
@@ -130,49 +127,6 @@ public class LAppMinimumDelegate {
         if (isCaptured && view != null) {
             view.onTouchesMoved(mouseX, mouseY);
         }
-    }
-
-    // シェーダーを登録する
-    public int createShader() {
-        int vertexShaderId = glCreateShader(GLES20.GL_VERTEX_SHADER);
-        final String vertexShader =
-            "attribute vec3 position;" +
-                "attribute vec2 uv;" +
-                "varying vec2 vuv;" +
-                "void main(void){" +
-                "gl_Position = vec4(position, 1.0);" +
-                "vuv = uv;" +
-                "}";
-
-        GLES20.glShaderSource(vertexShaderId, vertexShader);
-        GLES20.glCompileShader(vertexShaderId);
-
-        // フラグメントシェーダのコンパイル
-        int fragmentShaderId = glCreateShader(GLES20.GL_FRAGMENT_SHADER);
-        final String fragmentShader =
-            "precision mediump float;" +
-                "uniform sampler2D texture;" +
-                "varying vec2 vuv;" +
-                "uniform vec4 baseColor;" +
-                "void main(void){" +
-                "gl_FragColor = texture2D(texture, vuv);" +
-                "}";
-
-        GLES20.glShaderSource(fragmentShaderId, fragmentShader);
-        GLES20.glCompileShader(fragmentShaderId);
-
-        // プログラムオブジェクトの作成
-        int programId = GLES20.glCreateProgram();
-
-        // Programのシェーダーを設定
-        GLES20.glAttachShader(programId, vertexShaderId);
-        GLES20.glAttachShader(programId, fragmentShaderId);
-
-        GLES20.glLinkProgram(programId);
-
-        GLES20.glUseProgram(programId);
-
-        return programId;
     }
 
     // getter, setter群

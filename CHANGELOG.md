@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [5-r.1] - 2024-03-26
+
+### Added
+
+* Add a OpenGL shader setup class.
+
+### Changed
+
+* Change so that `LAppSprite` does not depend on `LAppDelegate`.
+* Change to read shader source codes from files.
+
+### Fixed
+
+* Fix a problem where two application icons are generated when installing the Minimum sample application on a device.
+
+### Removed
+
+* Remove description of CMake from development environment in README files.
+  * CMake is not actually used.
+* Remove the unnecessary `if` branch due to raising the minimum API version.
+* Remove the description of NDK version.
+  * Because of not using NDK.
+* Remove the unnecessary variables in the `LAppSprite` class.
+
+
 ## [5-r.1-beta.3] - 2024-01-18
 
 ### Changed
@@ -114,6 +139,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 * New released!
 
+
+[5-r.1]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.1-beta.3...5-r.1
 [5-r.1-beta.3]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.1-beta.2...5-r.1-beta.3
 [5-r.1-beta.2]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.1-beta.1...5-r.1-beta.2
 [5-r.1-beta.1]: https://github.com/Live2D/CubismJavaSamples/compare/4-r.1...5-r.1-beta.1

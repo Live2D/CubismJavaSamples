@@ -114,6 +114,10 @@ public class LAppDefine {
          */
         ROOT(""),
         /**
+         * Relative path of shader directory
+         */
+        SHADER_ROOT("Shaders"),
+        /**
          * Background image file
          */
         BACK_IMAGE("back_class_normal.png"),
@@ -124,7 +128,15 @@ public class LAppDefine {
         /**
          * Power button image file
          */
-        POWER_IMAGE("close.png");
+        POWER_IMAGE("close.png"),
+        /**
+         * Vertex shader file
+         */
+        VERT_SHADER("VertSprite.vert"),
+        /**
+         * Fragment shader file
+         */
+        FRAG_SHADER("FragSprite.frag");
 
         private final String path;
 

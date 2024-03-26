@@ -18,6 +18,6 @@ Javaで開発する場合は、このファイルを使用してください。
 | プラットフォーム | アーキテクチャ  | jar | aar | パス | 注記  |
 | --- |----------|---|-----|---|-----|
 | Android | ARM64    |   | ✓ | android/Live2DCubismCore.aar |     |
-| Android | ARMv7    |   | ✓ | android/Live2DCubismCore.aar |     |
+| Android | ARMv7    |   | ✓ | android/Live2DCubismCore.aar | このライブラリは現在非推奨で、近日中に削除される予定です。 |
 | Android | x86      |   | ✓ | android/Live2DCubismCore.aar |     |
 | Android | x86_64   |   | ✓ | android/Live2DCubismCore.aar |     |
