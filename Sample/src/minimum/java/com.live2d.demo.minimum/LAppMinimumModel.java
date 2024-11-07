@@ -20,6 +20,7 @@ import com.live2d.sdk.cubism.framework.model.CubismUserModel;
 import com.live2d.sdk.cubism.framework.motion.ACubismMotion;
 import com.live2d.sdk.cubism.framework.motion.CubismExpressionMotion;
 import com.live2d.sdk.cubism.framework.motion.CubismMotion;
+import com.live2d.sdk.cubism.framework.motion.IBeganMotionCallback;
 import com.live2d.sdk.cubism.framework.motion.IFinishedMotionCallback;
 import com.live2d.sdk.cubism.framework.rendering.CubismRenderer;
 import com.live2d.sdk.cubism.framework.rendering.android.CubismOffscreenSurfaceAndroid;
@@ -146,7 +147,6 @@ public class LAppMinimumModel extends CubismUserModel {
 
     /**
      * 引数で指定したモーションの再生を開始する。
-     * コールバック関数が渡されなかった場合にそれをnullとして同メソッドを呼び出す。
      *
      * @param group    モーショングループ名
      * @param number   グループ内の番号
@@ -154,22 +154,6 @@ public class LAppMinimumModel extends CubismUserModel {
      * @return 開始したモーションの識別番号を返す。個別のモーションが終了したか否かを判別するisFinished()の引数で使用する。開始できない時は「-1」
      */
     public int startMotion(final String group, int number, int priority) {
-        return startMotion(group, number, priority, null);
-    }
-
-    /**
-     * 引数で指定したモーションの再生を開始する。
-     *
-     * @param group                   モーショングループ名
-     * @param number                  グループ内の番号
-     * @param priority                優先度
-     * @param onFinishedMotionHandler モーション再生終了時に呼び出されるコールバック関数。nullの場合は呼び出されない。
-     * @return 開始したモーションの識別番号を返す。個別のモーションが終了したか否かを判定するisFinished()の引数で使用する。開始できない時は「-1」
-     */
-    public int startMotion(final String group,
-                           int number,
-                           int priority,
-                           IFinishedMotionCallback onFinishedMotionHandler) {
         if (priority == LAppDefine.Priority.FORCE.getPriority()) {
             motionManager.setReservationPriority(priority);
         } else if (!motionManager.reserveMotion(priority)) {
@@ -193,7 +177,7 @@ public class LAppMinimumModel extends CubismUserModel {
                 byte[] buffer;
                 buffer = LAppMinimumPal.loadFileAsBytes(path);
 
-                CubismMotion tmpMotion = loadMotion(buffer, onFinishedMotionHandler);
+                CubismMotion tmpMotion = loadMotion(buffer);
                 if (tmpMotion != null) {
                     motion = (CubismMotion) tmpMotion;
 
@@ -208,8 +192,6 @@ public class LAppMinimumModel extends CubismUserModel {
                     }
                 }
             }
-        } else {
-            motion.setFinishedMotionHandler(onFinishedMotionHandler);
         }
 
         if (LAppDefine.DEBUG_LOG_ENABLE) {
@@ -443,7 +425,6 @@ public class LAppMinimumModel extends CubismUserModel {
         }
     }
 
-
     private ICubismModelSetting modelSetting;
     /**
      * モデルのホームディレクトリ
@@ -492,5 +473,5 @@ public class LAppMinimumModel extends CubismUserModel {
     /**
      * フレームバッファ以外の描画先
      */
-    private CubismOffscreenSurfaceAndroid renderingBuffer;
+    private CubismOffscreenSurfaceAndroid renderingBuffer = new CubismOffscreenSurfaceAndroid();
 }

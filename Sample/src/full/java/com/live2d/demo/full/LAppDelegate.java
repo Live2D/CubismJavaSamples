@@ -113,7 +113,6 @@ public class LAppDelegate {
         // アプリケーションを非アクティブにする
         if (!isActive) {
             activity.finishAndRemoveTask();
-            System.exit(0);
         }
     }
 

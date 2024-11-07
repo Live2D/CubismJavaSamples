@@ -96,7 +96,6 @@ public class LAppMinimumDelegate {
         // アプリケーションを非アクティブにする
         if (!isActive) {
             activity.finishAndRemoveTask();
-            System.exit(0);
         }
     }
 

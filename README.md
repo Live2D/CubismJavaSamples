@@ -71,8 +71,9 @@ Core : [CHANGELOG.md](Core/CHANGELOG.md)
 
 | Development Tools | Version |
 |-------------------|--|
-| Android Studio    | Iguana 2023.2.1 |
+| Android Studio    | Ladybug 2024.2.1 Patch 2 |
 | Gradle            | 8.2 |
+| Gradle JDK | 17.0.12 |
 | Android SDK | 34.0.0       |
 
 ## Operation environment
@@ -83,11 +84,10 @@ This sample application runs with **Java SE 7** or higher Java versions.
 
 ### Android
 
-| Version | Device   | Tegra |
-|---------|----------| --- |
-| 14     | Pixel 7a ||
-| 7.1.1   | Nexus 9  | ✔︎ |
-| 4.1   | Pixel 5  ||
+| Version | Device   | Emulator |
+|---------|----------|:--------:|
+| 14      | Pixel 7a |          |
+| 5.0     | Pixel 7a |    ✔     |
 
 This sample application runs with **Android API 21** or higher Android versions.
 

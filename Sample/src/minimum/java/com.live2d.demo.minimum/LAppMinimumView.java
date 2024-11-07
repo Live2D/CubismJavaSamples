@@ -14,6 +14,15 @@ import com.live2d.sdk.cubism.framework.math.CubismViewMatrix;
 import com.live2d.sdk.cubism.framework.rendering.android.CubismOffscreenSurfaceAndroid;
 
 public class LAppMinimumView implements AutoCloseable {
+    /**
+     * LAppMinimumModelのレンダリング先
+     */
+    public enum RenderingTarget {
+        NONE,   // デフォルトのフレームバッファにレンダリング
+        MODEL_FRAME_BUFFER,     // LAppMinimumModelが各自持つフレームバッファにレンダリング
+        VIEW_FRAME_BUFFER  // LAppMinimumViewが持つフレームバッファにレンダリング
+    }
+
     public LAppMinimumView() {
         clearColor[0] = 1.0f;
         clearColor[1] = 1.0f;
@@ -86,8 +95,110 @@ public class LAppMinimumView implements AutoCloseable {
 
     // 描画する
     public void render() {
+        // 画面サイズを取得する。
+        int maxWidth = LAppMinimumDelegate.getInstance().getWindowWidth();
+        int maxHeight = LAppMinimumDelegate.getInstance().getWindowHeight();
+
         // モデルの描画
         LAppMinimumLive2DManager.getInstance().onUpdate();
+
+        // 各モデルが持つ描画ターゲットをテクスチャとする場合
+        if (renderingTarget == RenderingTarget.MODEL_FRAME_BUFFER && renderingSprite != null) {
+            final float[] uvVertex = {
+                1.0f, 1.0f,
+                0.0f, 1.0f,
+                0.0f, 0.0f,
+                1.0f, 0.0f
+            };
+
+            LAppMinimumModel model = LAppMinimumLive2DManager.getInstance().getModel(0);
+            float alpha = getSpriteAlpha(2);    // 片方のみ不透明度を取得できるようにする。
+
+            renderingSprite.setColor(1.0f, 1.0f, 1.0f, alpha);
+
+            if (model != null) {
+                renderingSprite.setWindowSize(maxWidth, maxHeight);
+                renderingSprite.renderImmediate(model.getRenderingBuffer().getColorBuffer()[0], uvVertex);
+            }
+        }
+    }
+
+    /**
+     * モデル1体を描画する直前にコールされる
+     *
+     * @param refModel モデルデータ
+     */
+    public void preModelDraw(LAppMinimumModel refModel) {
+        // 別のレンダリングターゲットへ向けて描画する場合の使用するオフスクリーンサーフェス
+        CubismOffscreenSurfaceAndroid useTarget;
+
+        // 別のレンダリングターゲットへ向けて描画する場合
+        if (renderingTarget != RenderingTarget.NONE) {
+
+            // 使用するターゲット
+            useTarget = (renderingTarget == RenderingTarget.VIEW_FRAME_BUFFER)
+                ? renderingBuffer
+                : refModel.getRenderingBuffer();
+
+            // 描画ターゲット内部未作成の場合はここで作成
+            if (!useTarget.isValid()) {
+                int width = LAppMinimumDelegate.getInstance().getWindowWidth();
+                int height = LAppMinimumDelegate.getInstance().getWindowHeight();
+
+                // モデル描画キャンバス
+                useTarget.createOffscreenSurface(width, height, null);
+            }
+            // レンダリング開始
+            useTarget.beginDraw();
+            useTarget.clear(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);   // 背景クリアカラー
+        }
+    }
+
+    /**
+     * モデル1体を描画した直後にコールされる
+     *
+     * @param refModel モデルデータ
+     */
+    public void postModelDraw(LAppMinimumModel refModel) {
+        CubismOffscreenSurfaceAndroid useTarget = null;
+
+        // 別のレンダリングターゲットへ向けて描画する場合
+        if (renderingTarget != RenderingTarget.NONE) {
+            // 使用するターゲット
+            useTarget = (renderingTarget == RenderingTarget.VIEW_FRAME_BUFFER)
+                ? renderingBuffer
+                : refModel.getRenderingBuffer();
+
+            // レンダリング終了
+            useTarget.endDraw();
+
+            // LAppViewの持つフレームバッファを使うなら、スプライトへの描画はこことなる
+            if (renderingTarget == RenderingTarget.VIEW_FRAME_BUFFER && renderingSprite != null) {
+                final float[] uvVertex = {
+                    1.0f, 1.0f,
+                    0.0f, 1.0f,
+                    0.0f, 0.0f,
+                    1.0f, 0.0f
+                };
+                renderingSprite.setColor(1.0f, 1.0f, 1.0f, getSpriteAlpha(0));
+
+                // 画面サイズを取得する。
+                int maxWidth = LAppMinimumDelegate.getInstance().getWindowWidth();
+                int maxHeight = LAppMinimumDelegate.getInstance().getWindowHeight();
+
+                renderingSprite.setWindowSize(maxWidth, maxHeight);
+                renderingSprite.renderImmediate(useTarget.getColorBuffer()[0], uvVertex);
+            }
+        }
+    }
+
+    /**
+     * レンダリング先を切り替える
+     *
+     * @param targetType レンダリング先
+     */
+    public void switchRenderingTarget(RenderingTarget targetType) {
+        renderingTarget = targetType;
     }
 
     /**
@@ -159,15 +270,62 @@ public class LAppMinimumView implements AutoCloseable {
         return viewMatrix.invertTransformX(screenY);
     }
 
+    /**
+     * レンダリング先をデフォルト以外に切り替えた際の背景クリア色設定
+     *
+     * @param r 赤(0.0~1.0)
+     * @param g 緑(0.0~1.0)
+     * @param b 青(0.0~1.0)
+     */
+    public void setRenderingTargetClearColor(float r, float g, float b) {
+        clearColor[0] = r;
+        clearColor[1] = g;
+        clearColor[2] = b;
+    }
+
+    /**
+     * 別レンダリングターゲットにモデルを描画するサンプルで描画時のαを決定する
+     *
+     * @param assign α値の算出に使用する値
+     * @return 算出されたα値
+     */
+    public float getSpriteAlpha(int assign) {
+        // assignの数値に応じて適当な差をつける
+        float alpha = 0.25f + (float) assign * 0.5f;
+
+        // サンプルとしてαに適当な差をつける
+        if (alpha > 1.0f) {
+            alpha = 1.0f;
+        }
+        if (alpha < 0.1f) {
+            alpha = 0.1f;
+        }
+        return alpha;
+    }
+
+    /**
+     * Return rendering target enum instance.
+     *
+     * @return rendering target
+     */
+    public RenderingTarget getRenderingTarget() {
+        return renderingTarget;
+    }
+
     private final CubismMatrix44 deviceToScreen = CubismMatrix44.create(); // デバイス座標からスクリーン座標に変換するための行列
     private final CubismViewMatrix viewMatrix = new CubismViewMatrix();   // 画面表示の拡縮や移動の変換を行う行列
+
+    /**
+     * レンダリング先の選択肢
+     */
+    private RenderingTarget renderingTarget = RenderingTarget.NONE;
 
     /**
      * レンダリングターゲットのクリアカラー
      */
     private final float[] clearColor = new float[4];
 
-    private CubismOffscreenSurfaceAndroid renderingBuffer;
+    private CubismOffscreenSurfaceAndroid renderingBuffer = new CubismOffscreenSurfaceAndroid();
 
     private LAppMinimumSprite renderingSprite;
 
