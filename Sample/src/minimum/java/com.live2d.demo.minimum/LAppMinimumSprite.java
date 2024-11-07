@@ -9,6 +9,8 @@ package com.live2d.demo.minimum;
 
 import android.opengl.GLES20;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
 import static android.opengl.GLES20.GL_FLOAT;
@@ -34,7 +36,7 @@ public class LAppMinimumSprite {
         positionLocation = GLES20.glGetAttribLocation(programId, "position");
         uvLocation = GLES20.glGetAttribLocation(programId, "uv");
         textureLocation = GLES20.glGetUniformLocation(programId, "texture");
-        colorLocation = GLES20.glGetAttribLocation(programId, "baseColor");
+        colorLocation = GLES20.glGetUniformLocation(programId, "baseColor");
 
         spriteColor[0] = 1.0f;
         spriteColor[1] = 1.0f;
@@ -65,8 +67,24 @@ public class LAppMinimumSprite {
         };
 
         // attribute属性を登録
-        GLES20.glVertexAttribPointer(positionLocation, 2, GL_FLOAT, false, 0, FloatBuffer.wrap(positionVertex));
-        GLES20.glVertexAttribPointer(uvLocation, 2, GL_FLOAT, false, 0, FloatBuffer.wrap(uvVertex));
+        {
+            ByteBuffer bb = ByteBuffer.allocateDirect(positionVertex.length * 4);
+            bb.order(ByteOrder.nativeOrder());
+            FloatBuffer buffer = bb.asFloatBuffer();
+            buffer.put(positionVertex);
+            buffer.position(0);
+
+            GLES20.glVertexAttribPointer(positionLocation, 2, GL_FLOAT, false, 0, buffer);
+        }
+        {
+            ByteBuffer bb = ByteBuffer.allocateDirect(uvVertex.length * 4);
+            bb.order(ByteOrder.nativeOrder());
+            FloatBuffer buffer = bb.asFloatBuffer();
+            buffer.put(uvVertex);
+            buffer.position(0);
+
+            GLES20.glVertexAttribPointer(uvLocation, 2, GL_FLOAT, false, 0, buffer);
+        }
 
         GLES20.glUniform4f(colorLocation, spriteColor[0], spriteColor[1], spriteColor[2], spriteColor[3]);
 

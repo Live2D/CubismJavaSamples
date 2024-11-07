@@ -51,8 +51,14 @@ public class LAppMinimumLive2DManager {
             viewMatrix.multiplyByMatrix(projection);
         }
 
+        // 描画前コール
+        LAppMinimumDelegate.getInstance().getView().preModelDraw(model);
+
         model.update();
         model.draw(projection);     // 参照渡しなのでprojectionは変質する
+
+        // 描画後コール
+        LAppMinimumDelegate.getInstance().getView().postModelDraw(model);
     }
 
     /**

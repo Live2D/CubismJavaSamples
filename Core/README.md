@@ -18,6 +18,5 @@ Use this file when developing with Java.
 | Platform | Architecture | jar | aar | Path                         | Note |
 | --- | --- | --- | --- |------------------------------| --- |
 | Android | ARM64 |  |✓  | android/Live2DCubismCore.aar |    |
-| Android | ARMv7 |  | ✓ | android/Live2DCubismCore.aar | This library is currently deprecated and will be removed in the near future. |
 | Android | x86 |  | ✓ | android/Live2DCubismCore.aar |    |
 | Android | x86_64 |  | ✓ | android/Live2DCubismCore.aar |    |

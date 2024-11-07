@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+
+## [5-r.2] - 2024-11-07
+
+### Added
+
+* Add a function to notify when motion playback starts.
+* Add right orientation to the fixed orientations in the Android app.
+* Add a feature to change render target to the minimum sample.
+
+### Fixed
+
+* Fix a hang-up caused by an improper function call in the application termination process.
+* Fix a bug that caused white edge-like objects to be drawn when enabling the `USE_RENDER_TARGET` or `USE_MODEL_RENDER_TARGET` flag in `LAppDefine`.
+* Fix a bug where the method of obtaining color location differs between full sample and minimum sample.
+
+### Removed
+
+* Remove armeabi-v7a from architecture support.
+* Remove the `startMotion()` method that receives a callback in the minimum sample.
+  * If you want to use the callback feature, please check the Full sample.
+
+
 ## [5-r.1] - 2024-03-26
 
 ### Added
@@ -140,6 +162,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * New released!
 
 
+[5-r.2]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.1...5-r.2
 [5-r.1]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.1-beta.3...5-r.1
 [5-r.1-beta.3]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.1-beta.2...5-r.1-beta.3
 [5-r.1-beta.2]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.1-beta.1...5-r.1-beta.2

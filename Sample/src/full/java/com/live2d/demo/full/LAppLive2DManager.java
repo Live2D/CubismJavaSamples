@@ -9,6 +9,7 @@ package com.live2d.demo.full;
 
 import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
 import com.live2d.sdk.cubism.framework.motion.ACubismMotion;
+import com.live2d.sdk.cubism.framework.motion.IBeganMotionCallback;
 import com.live2d.sdk.cubism.framework.motion.IFinishedMotionCallback;
 
 import java.io.IOException;
@@ -154,7 +155,7 @@ public class LAppLive2DManager {
                     LAppPal.printLog("hit area: " + HitAreaName.HEAD.getId());
                 }
 
-                model.startRandomMotion(MotionGroup.TAP_BODY.getId(), Priority.NORMAL.getPriority(), finishedMotion);
+                model.startRandomMotion(MotionGroup.TAP_BODY.getId(), Priority.NORMAL.getPriority(), finishedMotion, beganMotion);
             }
         }
     }
@@ -218,7 +219,7 @@ public class LAppLive2DManager {
         LAppDelegate.getInstance().getView().switchRenderingTarget(useRenderingTarget);
 
         // 別レンダリング先を選択した際の背景クリア色
-        float[] clearColor = {1.0f, 1.0f, 1.0f};
+        float[] clearColor = {0.0f, 0.0f, 0.0f};
         LAppDelegate.getInstance().getView().setRenderingTargetClearColor(clearColor[0], clearColor[1], clearColor[2]);
     }
 
@@ -255,6 +256,18 @@ public class LAppLive2DManager {
         }
         return models.size();
     }
+
+    /**
+     * モーション再生時に実行されるコールバック関数
+     */
+    private static class BeganMotion implements IBeganMotionCallback {
+        @Override
+        public void execute(ACubismMotion motion) {
+            LAppPal.printLog("Motion Began: " + motion);
+        }
+    }
+
+    private static final BeganMotion beganMotion = new BeganMotion();
 
     /**
      * モーション終了時に実行されるコールバック関数
