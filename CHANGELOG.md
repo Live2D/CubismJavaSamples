@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [5-r.3] - 2025-02-18
+
+### Fixed
+
+* Fix a bug where the application crashes when tapping the model repeatedly.
+
+### Changed
+
+* Change the compile and target SDK version of Android OS to 15.0 (API 35).
+  * Upgrade the version of Android Gradle Plugin from 8.1.1 to 8.6.1.
+  * Upgrade the version of Gradle from 8.2 to 8.7.
+  * Change the minimum version of Android Studio to Ladybug(2024.2.1).
+
+
 ## [5-r.2] - 2024-11-07
 
 ### Added
@@ -162,6 +176,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * New released!
 
 
+[5-r.3]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.2...5-r.3
 [5-r.2]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.1...5-r.2
 [5-r.1]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.1-beta.3...5-r.1
 [5-r.1-beta.3]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.1-beta.2...5-r.1-beta.3
