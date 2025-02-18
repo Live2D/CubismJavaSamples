@@ -72,9 +72,10 @@ Core : [CHANGELOG.md](Core/CHANGELOG.md)
 | 開発ツール          | バージョン            |
 |----------------|------------------|
 | Android Studio | Ladybug 2024.2.1 Patch 2 |
-| Gradle         | 8.2           |
+| Gradle         | 8.7           |
+| Android Gradle Plugin | 8.6.1 |
 | Gradle JDK | 17.0.12 |
-| Android SDK | 34.0.0       |
+| Android SDK | 35.0.0       |
 
 ## 動作確認環境
 
