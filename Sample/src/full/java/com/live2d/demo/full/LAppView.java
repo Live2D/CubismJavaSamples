@@ -7,12 +7,16 @@
 
 package com.live2d.demo.full;
 
+import android.opengl.GLES20;
+
 import com.live2d.demo.TouchManager;
 import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
 import com.live2d.sdk.cubism.framework.math.CubismViewMatrix;
 import com.live2d.sdk.cubism.framework.rendering.android.CubismOffscreenSurfaceAndroid;
 
 import static com.live2d.demo.LAppDefine.*;
+
+import static android.opengl.GLES20.*;
 
 public class LAppView implements AutoCloseable {
     /**
@@ -177,11 +181,12 @@ public class LAppView implements AutoCloseable {
                 1.0f, 0.0f
             };
 
+
             for (int i = 0; i < live2dManager.getModelNum(); i++) {
                 LAppModel model = live2dManager.getModel(i);
                 float alpha = i < 1 ? 1.0f : model.getOpacity();    // 片方のみ不透明度を取得できるようにする。
 
-                renderingSprite.setColor(1.0f, 1.0f, 1.0f, alpha);
+                renderingSprite.setColor(1.0f * alpha, 1.0f * alpha, 1.0f * alpha, alpha);
 
                 if (model != null) {
                     renderingSprite.setWindowSize(maxWidth, maxHeight);
@@ -199,6 +204,9 @@ public class LAppView implements AutoCloseable {
     public void preModelDraw(LAppModel refModel) {
         // 別のレンダリングターゲットへ向けて描画する場合の使用するオフスクリーンサーフェス
         CubismOffscreenSurfaceAndroid useTarget;
+
+        // 透過設定
+        GLES20.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
         // 別のレンダリングターゲットへ向けて描画する場合
         if (renderingTarget != RenderingTarget.NONE) {
@@ -248,7 +256,7 @@ public class LAppView implements AutoCloseable {
                     0.0f, 0.0f,
                     1.0f, 0.0f
                 };
-                renderingSprite.setColor(1.0f, 1.0f, 1.0f, getSpriteAlpha(0));
+                renderingSprite.setColor(1.0f * getSpriteAlpha(0), 1.0f * getSpriteAlpha(0), 1.0f * getSpriteAlpha(0), getSpriteAlpha(0));
 
                 // 画面サイズを取得する。
                 int maxWidth = LAppDelegate.getInstance().getWindowWidth();
@@ -397,7 +405,7 @@ public class LAppView implements AutoCloseable {
      */
     public float getSpriteAlpha(int assign) {
         // assignの数値に応じて適当な差をつける
-        float alpha = 0.25f + (float) assign * 0.5f;
+        float alpha = 0.4f + (float) assign * 0.5f;
 
         // サンプルとしてαに適当な差をつける
         if (alpha > 1.0f) {

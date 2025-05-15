@@ -73,7 +73,7 @@ public class LAppDelegate {
 
         // 透過設定
         GLES20.glEnable(GLES20.GL_BLEND);
-        GLES20.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        GLES20.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
         // Initialize Cubism SDK framework
         CubismFramework.initialize();

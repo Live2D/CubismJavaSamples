@@ -5,11 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [5-r.4] - 2025-05-15
+
+### Added
+
+* Add a flag to enable the function that verifies the consistency when loading `motion3.json`.
+
+### Changed
+
+* Change the blend mode when using the `USE_RENDER_TARGET` or `USE_MODEL_RENDER_TARGET` flags in `LAppDefine`, and apply Premultiplied Alpha to the color settings of rendering targets.
+Also adjust the return value of the getSpriteAlpha function.
+
+
 ## [5-r.3] - 2025-02-18
 
 ### Fixed
 
 * Fix a bug where the application crashes when tapping the model repeatedly.
+* Fix a bug where the priority was not reset if the motion was not read correctly.
 
 ### Changed
 
@@ -17,6 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   * Upgrade the version of Android Gradle Plugin from 8.1.1 to 8.6.1.
   * Upgrade the version of Gradle from 8.2 to 8.7.
   * Change the minimum version of Android Studio to Ladybug(2024.2.1).
+* Change the default JDK version for compilation to 17 using Gradle's Java toolchain.
 
 
 ## [5-r.2] - 2024-11-07
@@ -176,6 +190,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 * New released!
 
 
+[5-r.4]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.3...5-r.4
 [5-r.3]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.2...5-r.3
 [5-r.2]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.1...5-r.2
 [5-r.1]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.1-beta.3...5-r.1
