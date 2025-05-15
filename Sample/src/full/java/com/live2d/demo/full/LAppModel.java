@@ -41,6 +41,10 @@ public class LAppModel extends CubismUserModel {
             mocConsistency = true;
         }
 
+        if (LAppDefine.MOTION_CONSISTENCY_VALIDATION_ENABLE) {
+            motionConsistency = true;
+        }
+
         if (LAppDefine.DEBUG_LOG_ENABLE) {
             debugMode = true;
         }
@@ -227,7 +231,7 @@ public class LAppModel extends CubismUserModel {
                 byte[] buffer;
                 buffer = createBuffer(path);
 
-                motion = loadMotion(buffer, onFinishedMotionHandler, onBeganMotionHandler);
+                motion = loadMotion(buffer, onFinishedMotionHandler, onBeganMotionHandler, motionConsistency);
                 if (motion != null) {
                     final float fadeInTime = modelSetting.getMotionFadeInTimeValue(group, number);
 
@@ -241,6 +245,12 @@ public class LAppModel extends CubismUserModel {
                     }
 
                     motion.setEffectIds(eyeBlinkIds, lipSyncIds);
+                } else {
+                    CubismDebug.cubismLogError("Can't start motion %s", path);
+
+                    // ロードできなかったモーションのReservePriorityをリセットする。
+                    motionManager.setReservationPriority(LAppDefine.Priority.NONE.getPriority());
+                    return -1;
                 }
             }
         } else {
@@ -570,7 +580,7 @@ public class LAppModel extends CubismUserModel {
                 buffer = createBuffer(modelPath);
 
                 // If a motion cannot be loaded, a process is skipped.
-                CubismMotion tmp = loadMotion(buffer);
+                CubismMotion tmp = loadMotion(buffer, motionConsistency);
                 if (tmp == null) {
                     continue;
                 }

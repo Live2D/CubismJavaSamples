@@ -71,11 +71,11 @@ Core : [CHANGELOG.md](Core/CHANGELOG.md)
 
 | Development Tools | Version |
 |-------------------|--|
-| Android Studio    | Ladybug 2024.2.1 Patch 2 |
-| Gradle            | 8.7 |
+| Android Studio | Meerkat Feature Drop 2024.3.2 |
+| Gradle | 8.7 |
 | Android Gradle Plugin | 8.6.1 |
-| Gradle JDK | 17.0.12 |
-| Android SDK | 35.0.0       |
+| Gradle JDK | 21.0.7 |
+| Android SDK | 35.0.0 |
 
 ## Operation environment
 
@@ -87,7 +87,7 @@ This sample application runs with **Java SE 7** or higher Java versions.
 
 | Version | Device   | Emulator |
 |---------|----------|:--------:|
-| 14      | Pixel 7a |          |
+| 15      | Pixel 7a |          |
 | 5.0     | Pixel 7a |    ✔     |
 
 This sample application runs with **Android API 21** or higher Android versions.

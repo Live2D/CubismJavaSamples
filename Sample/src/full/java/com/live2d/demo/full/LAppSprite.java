@@ -54,6 +54,8 @@ public class LAppSprite {
         uvVertex[6] = 1.0f;
         uvVertex[7] = 1.0f;
 
+        // 透過設定
+        GLES20.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         GLES20.glEnableVertexAttribArray(positionLocation);
         GLES20.glEnableVertexAttribArray(uvLocation);

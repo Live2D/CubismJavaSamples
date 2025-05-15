@@ -71,11 +71,11 @@ Core : [CHANGELOG.md](Core/CHANGELOG.md)
 
 | 開発ツール          | バージョン            |
 |----------------|------------------|
-| Android Studio | Ladybug 2024.2.1 Patch 2 |
-| Gradle         | 8.7           |
+| Android Studio | Meerkat Feature Drop 2024.3.2 |
+| Gradle | 8.7 |
 | Android Gradle Plugin | 8.6.1 |
-| Gradle JDK | 17.0.12 |
-| Android SDK | 35.0.0       |
+| Gradle JDK | 21.0.7 |
+| Android SDK | 35.0.0 |
 
 ## 動作確認環境
 
@@ -87,7 +87,7 @@ Core : [CHANGELOG.md](Core/CHANGELOG.md)
 
 | バージョン | デバイス     | エミュレーター |
 |-------|----------|:-------:|
-| 14    | Pixel 7a |         |
+| 15    | Pixel 7a |         |
 | 5.0   | Pixel 7a |    ✔    |
 
 本サンプルアプリケーションは**Android API 21**以上のAndroidバージョンで動作します。
