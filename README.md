@@ -71,7 +71,7 @@ Core : [CHANGELOG.md](Core/CHANGELOG.md)
 
 | Development Tools | Version |
 |-------------------|--|
-| Android Studio | Meerkat Feature Drop 2024.3.2 |
+| Android Studio | Narwhal 2025.1.1 Patch 1 |
 | Gradle | 8.7 |
 | Android Gradle Plugin | 8.6.1 |
 | Gradle JDK | 21.0.7 |
@@ -85,12 +85,14 @@ This sample application runs with **Java SE 7** or higher Java versions.
 
 ### Android
 
-| Version | Device   | Emulator |
-|---------|----------|:--------:|
-| 15      | Pixel 7a |          |
-| 5.0     | Pixel 7a |    ✔     |
+| Version | Device   | Emulator | 16KB page sizes *1 |
+|---------|----------|:--------:|:--------:|
+| 16      | Pixel 9  |          |     ✔︎    |
+| 15      | Pixel 7a |          |          |
+| 5.0     | Pixel 7a |    ✔     |          |
 
 This sample application runs with **Android API 21** or higher Android versions.
+*1 This environment has been enabled using developer options.
 
 ## Contributing
 
