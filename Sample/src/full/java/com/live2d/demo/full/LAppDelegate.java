@@ -48,9 +48,7 @@ public class LAppDelegate {
         LAppPal.updateTime();
     }
 
-    public void onPause() {
-        currentModel = LAppLive2DManager.getInstance().getCurrentModel();
-    }
+    public void onPause() {}
 
     public void onStop() {
         if (view != null) {
@@ -89,9 +87,13 @@ public class LAppDelegate {
         view.initialize();
         view.initializeSprite();
 
+        // オフスクリーンのサイズ変更
+        LAppLive2DManager.getInstance().setRenderTargetSize(width, height);
+
         // load models
-        if (LAppLive2DManager.getInstance().getCurrentModel() != currentModel) {
-            LAppLive2DManager.getInstance().changeScene(currentModel);
+        LAppLive2DManager manager = LAppLive2DManager.getInstance();
+        if (manager.getModelNum() == 0) {
+            manager.changeScene(sceneIndex);
         }
 
         isActive = true;
@@ -159,6 +161,24 @@ public class LAppDelegate {
         return view;
     }
 
+    /**
+     * シーンインデックスを設定する。
+     *
+     * @param index シーンインデックス
+     */
+    public void setSceneIndex(int index) {
+        sceneIndex = index;
+    }
+
+    /**
+     * シーンインデックスを取得する。
+     *
+     * @return シーンインデックス
+     */
+    public int getSceneIndex() {
+        return sceneIndex;
+    }
+
     public int getWindowWidth() {
         return windowWidth;
     }
@@ -170,11 +190,12 @@ public class LAppDelegate {
     private static LAppDelegate s_instance;
 
     private LAppDelegate() {
-        currentModel = 0;
+        sceneIndex = 0;
 
         // Set up Cubism SDK framework.
         cubismOption.logFunction = new LAppPal.PrintLogFunction();
         cubismOption.loggingLevel = LAppDefine.cubismLoggingLevel;
+        cubismOption.loadFileFunction = new LAppPal.LoadFileFunction();
 
         CubismFramework.cleanUp();
         CubismFramework.startUp(cubismOption);
@@ -193,7 +214,7 @@ public class LAppDelegate {
     /**
      * モデルシーンインデックス
      */
-    private int currentModel;
+    private int sceneIndex;
 
     /**
      * クリックしているか

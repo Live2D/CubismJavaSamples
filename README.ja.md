@@ -12,11 +12,11 @@ Cubism Java Framework および Live2D Cubism Core Javaと組み合わせて使�
 本 SDK を使用する前に[ライセンス](LICENSE.md)をご確認ください。
 
 
-## Cubism 5新機能や過去バージョンとの互換性について
+## Cubism 5.3新機能や過去バージョンとの互換性について
 
-本 SDK はCubism 5に対応した製品です。
-Cubism 5 Editorに搭載された新機能のSDK対応については [こちら](https://docs.live2d.com/cubism-sdk-manual/cubism-5-new-functions/)をご確認ください。
-過去バージョンのCubism SDKとの互換性については [こちら](https://docs.live2d.com/cubism-sdk-manual/compatibility-with-cubism-5/)をご確認ください。
+本 SDK はCubism 5.3に対応した製品です。
+Cubism 5.3 Editorに搭載された新機能のSDK対応については [こちら](https://docs.live2d.com/cubism-sdk-manual/cubism-5-3-new-functions/)をご確認ください。  
+過去バージョンのCubism SDKとの互換性については [こちら](https://docs.live2d.com/cubism-sdk-manual/compatibility-with-cubism-5-3/)をご確認ください。
 
 
 ## ディレクトリ構成
@@ -71,11 +71,11 @@ Core : [CHANGELOG.md](Core/CHANGELOG.md)
 
 | 開発ツール          | バージョン            |
 |----------------|------------------|
-| Android Studio | Narwhal 2025.1.1 Patch 1 |
-| Gradle | 8.7 |
-| Android Gradle Plugin | 8.6.1 |
+| Android Studio | Otter 3 Feature Drop 2025.2.3 |
+| Gradle | 8.11.1 |
+| Android Gradle Plugin | 8.9.1 |
 | Gradle JDK | 21.0.7 |
-| Android SDK | 35.0.0 |
+| Android SDK | 36.0.0 |
 
 ## 動作確認環境
 
@@ -88,7 +88,7 @@ Core : [CHANGELOG.md](Core/CHANGELOG.md)
 | バージョン | デバイス     | エミュレーター | 16KBページサイズ *1 |
 |-------|----------|:-------:|:-------:|
 | 16    | Pixel 9  |         |    ✔︎    |
-| 15    | Pixel 7a |         |  |
+| 16    | Pixel 7a |         |  |
 | 5.0   | Pixel 7a |    ✔    |  |
 
 本サンプルアプリケーションは**Android API 21**以上のAndroidバージョンで動作します。

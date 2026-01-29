@@ -15,7 +15,7 @@
     <activity
       android:name=".full.MainActivity"
       android:configChanges="orientation|screenSize"
-      android:screenOrientation="sensorLandscape"
+      android:screenOrientation="fullUser"
       android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
