@@ -9,6 +9,7 @@ package com.live2d.demo.minimum;
 import android.util.Log;
 import com.live2d.demo.LAppDefine;
 import com.live2d.sdk.cubism.core.ICubismLogger;
+import com.live2d.sdk.cubism.framework.ICubismLoadFileFunction;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +22,16 @@ public class LAppMinimumPal {
         @Override
         public void print(String message) {
             Log.d(TAG, message);
+        }
+    }
+
+    /**
+     * File loading function class to be registered in the CubismFramework's file loading function.
+     */
+    public static class LoadFileFunction implements ICubismLoadFileFunction {
+        @Override
+        public byte[] load(String path) {
+            return LAppMinimumPal.loadFileAsBytes(path);
         }
     }
 

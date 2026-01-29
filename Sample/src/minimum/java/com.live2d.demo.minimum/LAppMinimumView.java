@@ -11,7 +11,7 @@ import com.live2d.demo.LAppDefine;
 import com.live2d.demo.TouchManager;
 import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
 import com.live2d.sdk.cubism.framework.math.CubismViewMatrix;
-import com.live2d.sdk.cubism.framework.rendering.android.CubismOffscreenSurfaceAndroid;
+import com.live2d.sdk.cubism.framework.rendering.android.CubismRenderTargetAndroid;
 
 public class LAppMinimumView implements AutoCloseable {
     /**
@@ -130,7 +130,7 @@ public class LAppMinimumView implements AutoCloseable {
      */
     public void preModelDraw(LAppMinimumModel refModel) {
         // 別のレンダリングターゲットへ向けて描画する場合の使用するオフスクリーンサーフェス
-        CubismOffscreenSurfaceAndroid useTarget;
+        CubismRenderTargetAndroid useTarget;
 
         // 別のレンダリングターゲットへ向けて描画する場合
         if (renderingTarget != RenderingTarget.NONE) {
@@ -146,7 +146,7 @@ public class LAppMinimumView implements AutoCloseable {
                 int height = LAppMinimumDelegate.getInstance().getWindowHeight();
 
                 // モデル描画キャンバス
-                useTarget.createOffscreenSurface(width, height, null);
+                useTarget.createRenderTarget(width, height, null);
             }
             // レンダリング開始
             useTarget.beginDraw();
@@ -160,7 +160,7 @@ public class LAppMinimumView implements AutoCloseable {
      * @param refModel モデルデータ
      */
     public void postModelDraw(LAppMinimumModel refModel) {
-        CubismOffscreenSurfaceAndroid useTarget = null;
+        CubismRenderTargetAndroid useTarget = null;
 
         // 別のレンダリングターゲットへ向けて描画する場合
         if (renderingTarget != RenderingTarget.NONE) {
@@ -325,7 +325,7 @@ public class LAppMinimumView implements AutoCloseable {
      */
     private final float[] clearColor = new float[4];
 
-    private CubismOffscreenSurfaceAndroid renderingBuffer = new CubismOffscreenSurfaceAndroid();
+    private CubismRenderTargetAndroid renderingBuffer = new CubismRenderTargetAndroid();
 
     private LAppMinimumSprite renderingSprite;
 

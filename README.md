@@ -13,11 +13,11 @@ It is used in conjunction with Cubism Java Framework and Live2D Cubism Core Java
 Please check the [license](LICENSE.md) before using this SDK.
 
 
-## Compatibility with Cubism 5 new features and previous Cubism SDK versions
+## Compatibility with Cubism 5.3 new features and previous Cubism SDK versions
 
-This SDK is compatible with Cubism 5.
-For SDK compatibility with new features in Cubism 5 Editor, please refer to [here](https://docs.live2d.com/en/cubism-sdk-manual/cubism-5-new-functions/).
-For compatibility with previous versions of Cubism SDK, please refer to [here](https://docs.live2d.com/en/cubism-sdk-manual/compatibility-with-cubism-5/).
+This SDK is compatible with Cubism 5.3.
+For SDK compatibility with new features in Cubism 5.3 Editor, please refer to [here](https://docs.live2d.com/en/cubism-sdk-manual/cubism-5-3-new-functions/).  
+For compatibility with previous versions of Cubism SDK, please refer to [here](https://docs.live2d.com/en/cubism-sdk-manual/compatibility-with-cubism-5-3/).
 
 
 ## Directory structure
@@ -71,11 +71,11 @@ Core : [CHANGELOG.md](Core/CHANGELOG.md)
 
 | Development Tools | Version |
 |-------------------|--|
-| Android Studio | Narwhal 2025.1.1 Patch 1 |
-| Gradle | 8.7 |
-| Android Gradle Plugin | 8.6.1 |
+| Android Studio | Otter 3 Feature Drop 2025.2.3 |
+| Gradle | 8.11.1 |
+| Android Gradle Plugin | 8.9.1 |
 | Gradle JDK | 21.0.7 |
-| Android SDK | 35.0.0 |
+| Android SDK | 36.0.0 |
 
 ## Operation environment
 
@@ -88,7 +88,7 @@ This sample application runs with **Java SE 7** or higher Java versions.
 | Version | Device   | Emulator | 16KB page sizes *1 |
 |---------|----------|:--------:|:--------:|
 | 16      | Pixel 9  |          |     ✔︎    |
-| 15      | Pixel 7a |          |          |
+| 16      | Pixel 7a |          |          |
 | 5.0     | Pixel 7a |    ✔     |          |
 
 This sample application runs with **Android API 21** or higher Android versions.

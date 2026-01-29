@@ -11,6 +11,7 @@ import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
 import com.live2d.sdk.cubism.framework.motion.ACubismMotion;
 import com.live2d.sdk.cubism.framework.motion.IBeganMotionCallback;
 import com.live2d.sdk.cubism.framework.motion.IFinishedMotionCallback;
+import com.live2d.sdk.cubism.framework.rendering.android.CubismOffscreenManagerAndroid;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,6 +35,10 @@ public class LAppLive2DManager {
     }
 
     public static void releaseInstance() {
+        if (s_instance != null) {
+            s_instance.releaseAllModel();
+            CubismOffscreenManagerAndroid.releaseInstance();
+        }
         s_instance = null;
     }
 
@@ -79,6 +84,11 @@ public class LAppLive2DManager {
     public void onUpdate() {
         int width = LAppDelegate.getInstance().getWindowWidth();
         int height = LAppDelegate.getInstance().getWindowHeight();
+        float aspectRatio = (float) width / (float) height;
+        float displayRatio = (float) height / (float) width;
+
+        // モデルで使用するオフスクリーン管理の開始処理
+        CubismOffscreenManagerAndroid.getInstance().beginFrameProcess();
 
         for (int i = 0; i < models.size(); i++) {
             LAppModel model = models.get(i);
@@ -90,12 +100,16 @@ public class LAppLive2DManager {
 
             projection.loadIdentity();
 
-            if (model.getModel().getCanvasWidth() > 1.0f && width < height) {
-                // 横に長いモデルを縦長ウィンドウに表示する際モデルの横サイズでscaleを算出する
+            float canvasRatio = model.getModel().getCanvasHeight() / model.getModel().getCanvasWidth();
+
+            if (canvasRatio < displayRatio) {
+                // 横長モデルを幅に合わせて縦方向のスケールを調整
                 model.getModelMatrix().setWidth(2.0f);
-                projection.scale(1.0f, (float) width / (float) height);
+                projection.scale(1.0f, aspectRatio);
             } else {
-                projection.scale((float) height / (float) width, 1.0f);
+                // 縦長モデルを高さに合わせて横方向のスケールを調整
+                model.getModelMatrix().setHeight(2.0f);
+                projection.scale(1.0f / aspectRatio, 1.0f);
             }
 
             // 必要があればここで乗算する
@@ -113,6 +127,11 @@ public class LAppLive2DManager {
             // モデル1体描画後コール
             LAppDelegate.getInstance().getView().postModelDraw(model);
         }
+
+        // モデルで使用するオフスクリーン管理の終了処理
+        CubismOffscreenManagerAndroid.getInstance().endFrameProcess();
+        // もし余っているオフスクリーンのリソースを解放したい場合に行う処理
+        CubismOffscreenManagerAndroid.getInstance().releaseStaleRenderTextures();
     }
 
     /**
@@ -135,22 +154,37 @@ public class LAppLive2DManager {
      * @param y 画面のy座標
      */
     public void onTap(float x, float y) {
+        int width = LAppDelegate.getInstance().getWindowWidth();
+        int height = LAppDelegate.getInstance().getWindowHeight();
+        float aspectRatio = (float) width / (float) height;
+        float displayRatio = (float) height / (float) width;
+
         if (DEBUG_LOG_ENABLE) {
             LAppPal.printLog("tap point: {" + x + ", y: " + y);
         }
 
         for (int i = 0; i < models.size(); i++) {
             LAppModel model = models.get(i);
+            float canvasRatio = model.getModel().getCanvasHeight() / model.getModel().getCanvasWidth();
+
+            float adjustedX = x;
+            float adjustedY = y;
+
+            if (canvasRatio < displayRatio) {
+                // onUpdateでのプロジェクションスケールを打ち消してモデル座標系に変換
+                adjustedX = x / aspectRatio;
+                adjustedY = y / aspectRatio;
+            }
 
             // 頭をタップした場合表情をランダムで再生する
-            if (model.hitTest(HitAreaName.HEAD.getId(), x, y)) {
+            if (model.hitTest(HitAreaName.HEAD.getId(), adjustedX, adjustedY)) {
                 if (DEBUG_LOG_ENABLE) {
                     LAppPal.printLog("hit area: " + HitAreaName.HEAD.getId());
                 }
                 model.setRandomExpression();
             }
             // 体をタップした場合ランダムモーションを開始する
-            else if (model.hitTest(HitAreaName.BODY.getId(), x, y)) {
+            else if (model.hitTest(HitAreaName.BODY.getId(), adjustedX, adjustedY)) {
                 if (DEBUG_LOG_ENABLE) {
                     LAppPal.printLog("hit area: " + HitAreaName.HEAD.getId());
                 }
@@ -165,7 +199,7 @@ public class LAppLive2DManager {
      * サンプルアプリケーションではモデルセットの切り替えを行う
      */
     public void nextScene() {
-        final int number = (currentModel + 1) % modelDir.size();
+        final int number = (LAppDelegate.getInstance().getSceneIndex() + 1) % modelDir.size();
 
         changeScene(number);
     }
@@ -176,9 +210,9 @@ public class LAppLive2DManager {
      * @param index 切り替えるシーンインデックス
      */
     public void changeScene(int index) {
-        currentModel = index;
+        LAppDelegate.getInstance().setSceneIndex(index);
         if (DEBUG_LOG_ENABLE) {
-            LAppPal.printLog("model index: " + currentModel);
+            LAppPal.printLog("model index: " + index);
         }
 
         String modelDirName = modelDir.get(index);
@@ -237,15 +271,6 @@ public class LAppLive2DManager {
     }
 
     /**
-     * シーンインデックスを返す
-     *
-     * @return シーンインデックス
-     */
-    public int getCurrentModel() {
-        return currentModel;
-    }
-
-    /**
      * Return the number of models in this LAppLive2DManager instance has.
      *
      * @return number fo models in this LAppLive2DManager instance has. If models list is null, return 0.
@@ -255,6 +280,20 @@ public class LAppLive2DManager {
             return 0;
         }
         return models.size();
+    }
+
+    /**
+     * モデルのオフスクリーンのサイズを設定する。
+     *
+     * @param width  ウィンドウの幅
+     * @param height ウィンドウの高さ
+     */
+    public void setRenderTargetSize(int width, int height) {
+        for (int i = 0; i < models.size(); i++) {
+            LAppModel model = models.get(i);
+
+            model.setRenderTargetSize(width, height);
+        }
     }
 
     /**
@@ -288,15 +327,10 @@ public class LAppLive2DManager {
 
     private LAppLive2DManager() {
         setUpModel();
-        changeScene(0);
+        changeScene(LAppDelegate.getInstance().getSceneIndex());
     }
 
     private final List<LAppModel> models = new ArrayList<>();
-
-    /**
-     * 表示するシーンのインデックス値
-     */
-    private int currentModel;
 
     /**
      * モデルディレクトリ名

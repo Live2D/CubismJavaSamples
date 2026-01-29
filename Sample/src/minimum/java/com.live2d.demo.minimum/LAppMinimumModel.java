@@ -23,7 +23,7 @@ import com.live2d.sdk.cubism.framework.motion.CubismMotion;
 import com.live2d.sdk.cubism.framework.motion.IBeganMotionCallback;
 import com.live2d.sdk.cubism.framework.motion.IFinishedMotionCallback;
 import com.live2d.sdk.cubism.framework.rendering.CubismRenderer;
-import com.live2d.sdk.cubism.framework.rendering.android.CubismOffscreenSurfaceAndroid;
+import com.live2d.sdk.cubism.framework.rendering.android.CubismRenderTargetAndroid;
 import com.live2d.sdk.cubism.framework.rendering.android.CubismRendererAndroid;
 import com.live2d.sdk.cubism.framework.utils.CubismDebug;
 
@@ -54,7 +54,10 @@ public class LAppMinimumModel extends CubismUserModel {
         setupModel(filePath);
 
         // Setup renderer.
-        CubismRenderer renderer = CubismRendererAndroid.create();
+        CubismRenderer renderer = CubismRendererAndroid.create(
+            LAppMinimumDelegate.getInstance().getWindowWidth(),
+            LAppMinimumDelegate.getInstance().getWindowHeight()
+        );
         setupRenderer(renderer);
 
         setupTextures();
@@ -217,7 +220,7 @@ public class LAppMinimumModel extends CubismUserModel {
         this.<CubismRendererAndroid>getRenderer().drawModel();
     }
 
-    public CubismOffscreenSurfaceAndroid getRenderingBuffer() {
+    public CubismRenderTargetAndroid getRenderingBuffer() {
         return renderingBuffer;
     }
 
@@ -473,5 +476,5 @@ public class LAppMinimumModel extends CubismUserModel {
     /**
      * フレームバッファ以外の描画先
      */
-    private CubismOffscreenSurfaceAndroid renderingBuffer = new CubismOffscreenSurfaceAndroid();
+    private CubismRenderTargetAndroid renderingBuffer = new CubismRenderTargetAndroid();
 }

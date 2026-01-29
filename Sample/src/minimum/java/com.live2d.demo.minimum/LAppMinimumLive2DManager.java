@@ -8,6 +8,7 @@
 package com.live2d.demo.minimum;
 
 import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
+import com.live2d.sdk.cubism.framework.rendering.android.CubismOffscreenManagerAndroid;
 
 /**
  * サンプルアプリケーションにおいてCubismModelを管理するクラス。
@@ -22,6 +23,9 @@ public class LAppMinimumLive2DManager {
     }
 
     public static void releaseInstance() {
+        if (s_instance != null) {
+            CubismOffscreenManagerAndroid.releaseInstance();
+        }
         s_instance = null;
     }
 
@@ -35,15 +39,24 @@ public class LAppMinimumLive2DManager {
     public void onUpdate() {
         int width = LAppMinimumDelegate.getInstance().getWindowWidth();
         int height = LAppMinimumDelegate.getInstance().getWindowHeight();
+        float aspectRatio = (float) width / (float) height;
+        float displayRatio = (float) height / (float) width;
+
+        // モデルで使用するオフスクリーン管理の開始処理
+        CubismOffscreenManagerAndroid.getInstance().beginFrameProcess();
 
         projection.loadIdentity();
 
-        if (model.getModel().getCanvasWidth() > 1.0f && width < height) {
-            // 横に長いモデルを縦長ウィンドウに表示する際モデルの横サイズでscaleを算出する
+        float canvasRatio = model.getModel().getCanvasHeight() / model.getModel().getCanvasWidth();
+
+        if (canvasRatio < displayRatio) {
+            // 横長モデルを幅に合わせて縦方向のスケールを調整
             model.getModelMatrix().setWidth(2.0f);
-            projection.scale(1.0f, (float) width / (float) height);
+            projection.scale(1.0f, aspectRatio);
         } else {
-            projection.scale((float) height / (float) width, 1.0f);
+            // 縦長モデルを高さに合わせて横方向のスケールを調整
+            model.getModelMatrix().setHeight(2.0f);
+            projection.scale(1.0f / aspectRatio, 1.0f);
         }
 
         // 必要があればここで乗算する
@@ -59,6 +72,11 @@ public class LAppMinimumLive2DManager {
 
         // 描画後コール
         LAppMinimumDelegate.getInstance().getView().postModelDraw(model);
+
+        // モデルで使用するオフスクリーン管理の終了処理
+        CubismOffscreenManagerAndroid.getInstance().endFrameProcess();
+        // もし余っているオフスクリーンのリソースを解放したい場合行う処理
+        CubismOffscreenManagerAndroid.getInstance().releaseStaleRenderTextures();
     }
 
     /**
@@ -79,6 +97,18 @@ public class LAppMinimumLive2DManager {
      */
     public LAppMinimumModel getModel(int number) {
         return model;
+    }
+
+    /**
+     * モデルのオフスクリーンのサイズを設定する。
+     *
+     * @param width  ウィンドウの幅
+     * @param height ウィンドウの高さ
+     */
+    public void setRenderTargetSize(int width, int height) {
+        if (model != null) {
+            model.setRenderTargetSize(width, height);
+        }
     }
 
     /**

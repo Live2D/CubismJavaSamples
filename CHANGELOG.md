@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [5-r.5-beta.1] - 2026-01-29
+
+### Added
+
+* Add `Ren` model.
+* Add support for Blend mode and Offscreen drawing.
+  * Adapt to Framework API changes that require `CubismRendererAndroid.create()` to take window dimensions as parameters.
+* Add support for rendering portrait and landscape displays on Android.
+
+### Changed
+
+* Adapt to the Cubism SDK Framework's refactoring of hard-coded shaders into separate files.
+  * Add a class that implements the `ICubismLoadFileFunction` interface to handle file loading.
+* Change the compile and target SDK version of Android OS to 16.0 (API 36).
+  * Upgrade the version of Android Gradle Plugin from 8.6.1 to 8.9.1.
+  * Upgrade the version of Gradle from 8.7 to 8.11.1.
+
+### Fixed
+
+* Fix background image distortion when window size is changed.
+* Fix an issue in the Android sample where the model display would reset after performing certain operations.
+
+
 ## [5-r.4.1] - 2025-07-17
 
 ### Changed
@@ -199,6 +222,7 @@ Also adjust the return value of the getSpriteAlpha function.
 * New released!
 
 
+[5-r.5-beta.1]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.4.1...5-r.5-beta.1
 [5-r.4.1]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.4...5-r.4.1
 [5-r.4]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.3...5-r.4
 [5-r.3]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.2...5-r.3

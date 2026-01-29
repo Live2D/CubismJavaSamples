@@ -77,6 +77,9 @@ public class LAppMinimumDelegate {
         view.initialize();
         view.initializeSprite();
 
+        // オフスクリーンのサイズ変更
+        LAppMinimumLive2DManager.getInstance().setRenderTargetSize(width, height);
+
         isActive = true;
     }
 
@@ -154,6 +157,7 @@ public class LAppMinimumDelegate {
         // Set up Cubism SDK framework.
         cubismOption.logFunction = new LAppMinimumPal.PrintLogFunction();
         cubismOption.loggingLevel = LAppDefine.cubismLoggingLevel;
+        cubismOption.loadFileFunction = new LAppMinimumPal.LoadFileFunction();
 
         CubismFramework.cleanUp();
         CubismFramework.startUp(cubismOption);

@@ -12,7 +12,7 @@ import android.opengl.GLES20;
 import com.live2d.demo.TouchManager;
 import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
 import com.live2d.sdk.cubism.framework.math.CubismViewMatrix;
-import com.live2d.sdk.cubism.framework.rendering.android.CubismOffscreenSurfaceAndroid;
+import com.live2d.sdk.cubism.framework.rendering.android.CubismRenderTargetAndroid;
 
 import static com.live2d.demo.LAppDefine.*;
 
@@ -96,8 +96,9 @@ public class LAppView implements AutoCloseable {
         // x,yは画像の中心座標
         float x = windowWidth * 0.5f;
         float y = windowHeight * 0.5f;
-        float fWidth = backgroundTexture.width * 2.0f;
         float fHeight = windowHeight * 0.95f;
+        float ratio = fHeight / (float) backgroundTexture.height;
+        float fWidth = (float) backgroundTexture.width * ratio;
 
         int programId = spriteShader.getShaderId();
 
@@ -203,7 +204,7 @@ public class LAppView implements AutoCloseable {
      */
     public void preModelDraw(LAppModel refModel) {
         // 別のレンダリングターゲットへ向けて描画する場合の使用するオフスクリーンサーフェス
-        CubismOffscreenSurfaceAndroid useTarget;
+        CubismRenderTargetAndroid useTarget;
 
         // 透過設定
         GLES20.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
@@ -215,17 +216,16 @@ public class LAppView implements AutoCloseable {
             useTarget = (renderingTarget == RenderingTarget.VIEW_FRAME_BUFFER)
                         ? renderingBuffer
                         : refModel.getRenderingBuffer();
+            int width = LAppDelegate.getInstance().getWindowWidth();
+            int height = LAppDelegate.getInstance().getWindowHeight();
 
             // 描画ターゲット内部未作成の場合はここで作成
-            if (!useTarget.isValid()) {
-                int width = LAppDelegate.getInstance().getWindowWidth();
-                int height = LAppDelegate.getInstance().getWindowHeight();
-
+            if (!useTarget.isValid() || (int) useTarget.getBufferWidth() != width || (int) useTarget.getBufferHeight() != height) {
                 // モデル描画キャンバス
-                useTarget.createOffscreenSurface((int) width, (int) height, null);
+                useTarget.createRenderTarget((int) width, (int) height, null);
             }
             // レンダリング開始
-            useTarget.beginDraw(null);
+            useTarget.beginDraw();
             useTarget.clear(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);   // 背景クリアカラー
         }
     }
@@ -236,7 +236,7 @@ public class LAppView implements AutoCloseable {
      * @param refModel モデルデータ
      */
     public void postModelDraw(LAppModel refModel) {
-        CubismOffscreenSurfaceAndroid useTarget = null;
+        CubismRenderTargetAndroid useTarget = null;
 
         // 別のレンダリングターゲットへ向けて描画する場合
         if (renderingTarget != RenderingTarget.NONE) {
@@ -440,7 +440,7 @@ public class LAppView implements AutoCloseable {
      */
     private final float[] clearColor = new float[4];
 
-    private CubismOffscreenSurfaceAndroid renderingBuffer = new CubismOffscreenSurfaceAndroid();
+    private CubismRenderTargetAndroid renderingBuffer = new CubismRenderTargetAndroid();
 
     private LAppSprite backSprite;
     private LAppSprite gearSprite;
