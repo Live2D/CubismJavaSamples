@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [5-r.5-beta.1.1] - 2026-02-19
+
+### Fixed
+
+* Fix some problems related to rendering and clipping mask. 
+  * See `CHANGELOG.md` in Framework.
+
+
 ## [5-r.5-beta.1] - 2026-01-29
 
 ### Added
@@ -222,6 +230,7 @@ Also adjust the return value of the getSpriteAlpha function.
 * New released!
 
 
+[5-r.5-beta.1.1]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.5-beta.1...5-r.5-beta.1.1
 [5-r.5-beta.1]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.4.1...5-r.5-beta.1
 [5-r.4.1]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.4...5-r.4.1
 [5-r.4]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.3...5-r.4

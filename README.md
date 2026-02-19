@@ -71,7 +71,7 @@ Core : [CHANGELOG.md](Core/CHANGELOG.md)
 
 | Development Tools | Version |
 |-------------------|--|
-| Android Studio | Otter 3 Feature Drop 2025.2.3 |
+| Android Studio | Panda 1 2025.3.1 Patch 1 |
 | Gradle | 8.11.1 |
 | Android Gradle Plugin | 8.9.1 |
 | Gradle JDK | 21.0.7 |
