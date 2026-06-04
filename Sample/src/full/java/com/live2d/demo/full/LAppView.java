@@ -37,7 +37,18 @@ public class LAppView implements AutoCloseable {
 
     @Override
     public void close() {
-        spriteShader.close();
+        renderingBuffer.destroyRenderTarget();
+
+        renderingSprite = null;
+
+        if (spriteShader != null) {
+            spriteShader.close();
+            spriteShader = null;
+        }
+
+        backSprite = null;
+        gearSprite = null;
+        powerSprite = null;
     }
 
     // ビューを初期化する
@@ -203,7 +214,7 @@ public class LAppView implements AutoCloseable {
      * @param refModel モデルデータ
      */
     public void preModelDraw(LAppModel refModel) {
-        // 別のレンダリングターゲットへ向けて描画する場合の使用するオフスクリーンサーフェス
+        // 別のレンダリングターゲットへ向けて描画する場合の使用するレンダーターゲット
         CubismRenderTargetAndroid useTarget;
 
         // 透過設定
@@ -361,7 +372,7 @@ public class LAppView implements AutoCloseable {
         // 論理座標変換した座標を取得
         float screenY = deviceToScreen.transformY(deviceY);
         // 拡大、縮小、移動後の値
-        return viewMatrix.invertTransformX(screenY);
+        return viewMatrix.invertTransformY(screenY);
     }
 
     /**
@@ -381,7 +392,7 @@ public class LAppView implements AutoCloseable {
      * @return ScreenY座標
      */
     public float transformScreenY(float deviceY) {
-        return deviceToScreen.transformX(deviceY);
+        return deviceToScreen.transformY(deviceY);
     }
 
     /**

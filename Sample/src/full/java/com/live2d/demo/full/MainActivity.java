@@ -7,16 +7,19 @@
 
 package com.live2d.demo.full;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowInsets;
-import android.view.WindowInsetsController;
+
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 public class MainActivity extends Activity {
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,23 +31,50 @@ public class MainActivity extends Activity {
 
         glSurfaceView.setRenderer(glRenderer);
         glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+        glSurfaceView.setPreserveEGLContextOnPause(true);
 
         setContentView(glSurfaceView);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-            );
-        } else {
-            getWindow().getInsetsController().hide(WindowInsets.Type.navigationBars() | WindowInsets.Type.statusBars());
+        // GLSurfaceViewでタッチイベントを処理する
+        glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, final MotionEvent event) {
+                final float pointX = event.getX();
+                final float pointY = event.getY();
+                glSurfaceView.queueEvent(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            switch (event.getAction()) {
+                                case MotionEvent.ACTION_DOWN:
+                                    LAppDelegate.getInstance().onTouchBegan(pointX, pointY);
+                                    break;
+                                case MotionEvent.ACTION_UP:
+                                    LAppDelegate.getInstance().onTouchEnd(pointX, pointY);
+                                    break;
+                                case MotionEvent.ACTION_MOVE:
+                                    LAppDelegate.getInstance().onTouchMoved(pointX, pointY);
+                                    break;
+                            }
+                        }
+                    }
+                );
+                return true;
+            }
+        });
 
-            getWindow().getInsetsController().setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        // システムバーの表示制御を行うコントローラーを取得する
+        insetsController = WindowCompat.getInsetsController(
+            getWindow(),
+            getWindow().getDecorView()
+        );
+
+        if (insetsController != null) {
+            // スワイプで一時表示し、自動で再び隠す（没入モード）
+            insetsController.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
         }
+
+        hideSystemBars();
     }
 
     @Override
@@ -61,15 +91,7 @@ public class MainActivity extends Activity {
 
         glSurfaceView.onResume();
 
-        View decor = this.getWindow().getDecorView();
-        decor.setSystemUiVisibility(
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        );
+        hideSystemBars();
     }
 
     @Override
@@ -95,33 +117,21 @@ public class MainActivity extends Activity {
 
     }
 
-    @Override
-    public boolean onTouchEvent(final MotionEvent event) {
-        final float pointX = event.getX();
-        final float pointY = event.getY();
-
-        // GLSurfaceViewのイベント処理キューにタッチイベントを追加する。
-        glSurfaceView.queueEvent(
-            new Runnable() {
-                @Override
-                public void run() {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            LAppDelegate.getInstance().onTouchBegan(pointX, pointY);
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            LAppDelegate.getInstance().onTouchEnd(pointX, pointY);
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            LAppDelegate.getInstance().onTouchMoved(pointX, pointY);
-                            break;
-                    }
-                }
-            }
+    /**
+     * Hide the system bars (status bar and navigation bar).
+     */
+    private void hideSystemBars() {
+        insetsController.hide(
+            WindowInsetsCompat.Type.navigationBars()
+            | WindowInsetsCompat.Type.statusBars()
         );
-        return super.onTouchEvent(event);
     }
 
     private GLSurfaceView glSurfaceView;
     private GLRenderer glRenderer;
+
+    /**
+     * Reused across lifecycle methods to preserve bar behavior settings.
+     */
+    private WindowInsetsControllerCompat insetsController;
 }

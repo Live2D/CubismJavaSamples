@@ -12,6 +12,7 @@ import android.opengl.GLES20;
 import android.os.Build;
 import com.live2d.demo.LAppDefine;
 import com.live2d.sdk.cubism.framework.CubismFramework;
+import com.live2d.sdk.cubism.framework.rendering.android.CubismShaderAndroid;
 
 import static android.opengl.GLES20.*;
 
@@ -40,17 +41,15 @@ public class LAppDelegate {
     }
 
     public void onStart(Activity activity) {
-        textureManager = new LAppTextureManager();
-        view = new LAppView();
-
         this.activity = activity;
-
-        LAppPal.updateTime();
+        isActive = true;
     }
 
     public void onPause() {}
 
-    public void onStop() {
+    public void onStop() {}
+
+    public void onDestroy() {
         if (view != null) {
             view.close();
         }
@@ -58,9 +57,7 @@ public class LAppDelegate {
 
         LAppLive2DManager.releaseInstance();
         CubismFramework.dispose();
-    }
 
-    public void onDestroy() {
         releaseInstance();
     }
 
@@ -73,8 +70,33 @@ public class LAppDelegate {
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-        // Initialize Cubism SDK framework
-        CubismFramework.initialize();
+        if (textureManager == null) {
+            textureManager = new LAppTextureManager();
+        } else {
+            // 無効になっているテクスチャ情報を破棄
+            textureManager.releaseInvalidTextures();
+        }
+
+        if (view != null) {
+            view.close();
+        }
+        view = new LAppView();
+
+        LAppPal.updateTime();
+
+        if (!CubismFramework.isInitialized()) {
+            CubismFramework.initialize();
+        }
+
+        // 無効になっているOpenGLリソースを破棄
+        CubismShaderAndroid.getInstance().releaseInvalidShaderProgram();
+        // シェーダコードを再読み込みするためにインスタンスを破棄しておく
+        CubismShaderAndroid.deleteInstance();
+
+        LAppLive2DManager live2DManager = LAppLive2DManager.getInstance();
+        for (int i = 0; i < live2DManager.getModelNum(); i++) {
+            live2DManager.getModel(i).reloadRenderer();
+        }
     }
 
     public void onSurfaceChanged(int width, int height) {
@@ -89,14 +111,6 @@ public class LAppDelegate {
 
         // オフスクリーンのサイズ変更
         LAppLive2DManager.getInstance().setRenderTargetSize(width, height);
-
-        // load models
-        LAppLive2DManager manager = LAppLive2DManager.getInstance();
-        if (manager.getModelNum() == 0) {
-            manager.changeScene(sceneIndex);
-        }
-
-        isActive = true;
     }
 
     public void run() {

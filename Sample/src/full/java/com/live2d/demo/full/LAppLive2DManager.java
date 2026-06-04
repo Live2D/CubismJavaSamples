@@ -186,7 +186,7 @@ public class LAppLive2DManager {
             // 体をタップした場合ランダムモーションを開始する
             else if (model.hitTest(HitAreaName.BODY.getId(), adjustedX, adjustedY)) {
                 if (DEBUG_LOG_ENABLE) {
-                    LAppPal.printLog("hit area: " + HitAreaName.HEAD.getId());
+                    LAppPal.printLog("hit area: " + HitAreaName.BODY.getId());
                 }
 
                 model.startRandomMotion(MotionGroup.TAP_BODY.getId(), Priority.NORMAL.getPriority(), finishedMotion, beganMotion);
