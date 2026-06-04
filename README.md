@@ -71,11 +71,11 @@ Core : [CHANGELOG.md](Core/CHANGELOG.md)
 
 | Development Tools | Version |
 |-------------------|--|
-| Android Studio | Panda 1 2025.3.1 Patch 1 |
+| Android Studio | Panda 4 2025.3.4 Patch 1 |
 | Gradle | 8.11.1 |
 | Android Gradle Plugin | 8.9.1 |
 | Gradle JDK | 21.0.7 |
-| Android SDK | 36.0.0 |
+| Android SDK Platform | 36.0 |
 
 ## Operation environment
 
@@ -85,11 +85,12 @@ This sample application runs with **Java SE 7** or higher Java versions.
 
 ### Android
 
-| Version | Device   | Emulator | 16KB page sizes *1 |
-|---------|----------|:--------:|:--------:|
-| 16      | Pixel 9  |          |     ✔︎    |
-| 16      | Pixel 7a |          |          |
-| 5.0     | Pixel 7a |    ✔     |          |
+| API Level | Device   | 16KB page sizes *1 |
+|-----------|----------|:------------------:|
+| 36        | Pixel 9  |         ✔︎         |
+| 36        | Pixel 7a |                    |
+
+Note: The emulator has been tested with API 21 / 36.
 
 This sample application runs with **Android API 21** or higher Android versions.
 *1 This environment has been enabled using developer options.

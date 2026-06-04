@@ -48,8 +48,11 @@ public class LAppTextureManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // decodeStreamは乗算済みアルファとして画像を読み込むようである
-        Bitmap bitmap = BitmapFactory.decodeStream(stream);
+        
+        // LAppDefineで設定された乗算済みアルファの設定に従って画像を読み込む
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPremultiplied = LAppDefine.PREMULTIPLIED_ALPHA_ENABLE;
+        Bitmap bitmap = BitmapFactory.decodeStream(stream, null, options);
 
         // Texture0をアクティブにする
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
@@ -87,6 +90,13 @@ public class LAppTextureManager {
         }
 
         return textureInfo;
+    }
+
+    /**
+     * 無効になったテクスチャ情報を破棄する。GLコンテキストが破棄された場合に呼び出す。
+     */
+    public void releaseInvalidTextures() {
+        textures.clear();
     }
 
     private final List<TextureInfo> textures = new ArrayList<TextureInfo>();        // 画像情報のリスト

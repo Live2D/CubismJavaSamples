@@ -12,6 +12,7 @@ import android.opengl.GLES20;
 import android.os.Build;
 import com.live2d.demo.LAppDefine;
 import com.live2d.sdk.cubism.framework.CubismFramework;
+import com.live2d.sdk.cubism.framework.rendering.android.CubismShaderAndroid;
 
 import static android.opengl.GLES20.*;
 
@@ -33,14 +34,13 @@ public class LAppMinimumDelegate {
     }
 
     public void onStart(Activity activity) {
-        textureManager = new LAppMinimumTextureManager();
-        view = new LAppMinimumView();
-
-        LAppMinimumPal.updateTime();
         this.activity = activity;
+        isActive = true;
     }
 
-    public void onStop() {
+    public void onStop() {}
+
+    public void onDestroy() {
         if (view != null) {
             view.close();
         }
@@ -48,9 +48,7 @@ public class LAppMinimumDelegate {
 
         LAppMinimumLive2DManager.releaseInstance();
         CubismFramework.dispose();
-    }
 
-    public void onDestroy() {
         releaseInstance();
     }
 
@@ -63,8 +61,31 @@ public class LAppMinimumDelegate {
         GLES20.glEnable(GLES20.GL_BLEND);
         GLES20.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        // Initialize Cubism SDK framework
-        CubismFramework.initialize();
+        if (textureManager == null) {
+            textureManager = new LAppMinimumTextureManager();
+        } else {
+            // 無効になっているテクスチャ情報を破棄
+            textureManager.releaseInvalidTextures();
+        }
+
+        if (view != null) {
+            view.close();
+        }
+        view = new LAppMinimumView();
+
+        LAppMinimumPal.updateTime();
+
+        if (!CubismFramework.isInitialized()) {
+            CubismFramework.initialize();
+        }
+
+        // 無効になっているOpenGLリソースを破棄
+        CubismShaderAndroid.getInstance().releaseInvalidShaderProgram();
+        // シェーダコードを再読み込みするためにインスタンスを破棄しておく
+        CubismShaderAndroid.deleteInstance();
+
+        LAppMinimumLive2DManager live2DManager = LAppMinimumLive2DManager.getInstance();
+        live2DManager.getModel(0).reloadRenderer();
     }
 
     public void onSurfaceChanged(int width, int height) {
@@ -79,8 +100,6 @@ public class LAppMinimumDelegate {
 
         // オフスクリーンのサイズ変更
         LAppMinimumLive2DManager.getInstance().setRenderTargetSize(width, height);
-
-        isActive = true;
     }
 
     public void run() {

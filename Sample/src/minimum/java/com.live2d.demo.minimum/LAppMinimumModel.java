@@ -12,6 +12,7 @@ import com.live2d.sdk.cubism.framework.CubismDefaultParameterId;
 import com.live2d.sdk.cubism.framework.CubismFramework;
 import com.live2d.sdk.cubism.framework.CubismModelSettingJson;
 import com.live2d.sdk.cubism.framework.ICubismModelSetting;
+import com.live2d.sdk.cubism.framework.effect.CubismLook;
 import com.live2d.sdk.cubism.framework.id.CubismId;
 import com.live2d.sdk.cubism.framework.id.CubismIdManager;
 import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
@@ -19,7 +20,11 @@ import com.live2d.sdk.cubism.framework.model.CubismMoc;
 import com.live2d.sdk.cubism.framework.model.CubismUserModel;
 import com.live2d.sdk.cubism.framework.motion.ACubismMotion;
 import com.live2d.sdk.cubism.framework.motion.CubismExpressionMotion;
+import com.live2d.sdk.cubism.framework.motion.CubismExpressionUpdater;
+import com.live2d.sdk.cubism.framework.motion.CubismLookUpdater;
 import com.live2d.sdk.cubism.framework.motion.CubismMotion;
+import com.live2d.sdk.cubism.framework.motion.CubismPhysicsUpdater;
+import com.live2d.sdk.cubism.framework.motion.CubismPoseUpdater;
 import com.live2d.sdk.cubism.framework.motion.IBeganMotionCallback;
 import com.live2d.sdk.cubism.framework.motion.IFinishedMotionCallback;
 import com.live2d.sdk.cubism.framework.rendering.CubismRenderer;
@@ -71,6 +76,21 @@ public class LAppMinimumModel extends CubismUserModel {
     }
 
     /**
+     * レンダラとテクスチャを再構築する。GLコンテキストが破棄された場合に呼び出す。
+     */
+    public void reloadRenderer() {
+        deleteRenderer();
+
+        CubismRenderer renderer = CubismRendererAndroid.create(
+            LAppMinimumDelegate.getInstance().getWindowWidth(),
+            LAppMinimumDelegate.getInstance().getWindowHeight()
+        );
+        setupRenderer(renderer);
+
+        setupTextures();
+    }
+
+    /**
      * モデルの更新処理。モデルのパラメーターから描画状態を決定する
      */
     public void update() {
@@ -79,10 +99,8 @@ public class LAppMinimumModel extends CubismUserModel {
         final float deltaTimeSeconds = LAppMinimumPal.getDeltaTime();
         _userTimeSeconds += deltaTimeSeconds;
 
-        dragManager.update(deltaTimeSeconds);
-
         // モーションによるパラメーター更新の有無
-        boolean isMotionUpdated = false;
+        motionUpdated = false;
 
         // 前回セーブされた状態をロード
         model.loadParameters();
@@ -92,56 +110,14 @@ public class LAppMinimumModel extends CubismUserModel {
             startMotion(LAppDefine.MotionGroup.IDLE.getId(), 0, LAppDefine.Priority.IDLE.getPriority());
         } else {
             // モーションを更新
-            isMotionUpdated = motionManager.updateMotion(model, deltaTimeSeconds);
+            motionUpdated = motionManager.updateMotion(model, deltaTimeSeconds);
         }
 
         // モデルの状態を保存
         model.saveParameters();
 
-        // eye blink
-        // メインモーションの更新がないときだけまばたきする
-        if (!isMotionUpdated) {
-            if (eyeBlink != null) {
-                eyeBlink.updateParameters(model, deltaTimeSeconds);
-            }
-        }
-
-        // expression
-        // 表情でパラメータ更新（相対変化）
-        if (expressionManager != null) {
-            expressionManager.updateMotion(model, deltaTimeSeconds);
-        }
-
-        // ドラッグ追従機能
-        // ドラッグによる顔の向きの調整
-        float dragX = dragManager.getX();
-        float dragY = dragManager.getY();
-
-        model.addParameterValue(idParamAngleX, dragX * 30); // -30から30の値を加える
-        model.addParameterValue(idParamAngleY, dragY * 30);
-        model.addParameterValue(idParamAngleZ, dragX * dragY * (-30));
-
-        // ドラッグによる体の向きの調整
-        model.addParameterValue(idParamBodyAngleX, dragX * 10); // -10から10の値を加える
-
-        // ドラッグによる目の向きの調整
-        model.addParameterValue(idParamEyeBallX, dragX);  // -1から1の値を加える
-        model.addParameterValue(idParamEyeBallY, dragY);
-
-        // Breath Function
-        if (breath != null) {
-            breath.updateParameters(model, deltaTimeSeconds);
-        }
-
-        // Physics Setting
-        if (physics != null) {
-            physics.evaluate(model, deltaTimeSeconds);
-        }
-
-        // Pose Setting
-        if (pose != null) {
-            pose.updateParameters(model, deltaTimeSeconds);
-        }
+        // 各種パラメーターの更新（表情・物理・ポーズ・ドラッグ追従など）
+        updateScheduler.onLateUpdate(model, deltaTimeSeconds);
 
         model.update();
 
@@ -295,17 +271,8 @@ public class LAppMinimumModel extends CubismUserModel {
 
                 expressions.put(name, motion);
             }
-        }
 
-        // Physics
-        {
-            String path = this.modelSetting.getPhysicsFileName();
-            if (!path.equals("")) {
-                String modelPath = modelHomeDirectory + path;
-                byte[] buffer = LAppMinimumPal.loadFileAsBytes(modelPath);
-
-                loadPhysics(buffer);
-            }
+            updateScheduler.addUpdatableList(new CubismExpressionUpdater(expressionManager));
         }
 
         // Pose
@@ -317,6 +284,23 @@ public class LAppMinimumModel extends CubismUserModel {
                 byte[] buffer = LAppMinimumPal.loadFileAsBytes(modelPath);
 
                 loadPose(buffer);
+            }
+            if (pose != null) {
+                updateScheduler.addUpdatableList(new CubismPoseUpdater(pose));
+            }
+        }
+
+        // Physics
+        {
+            String path = this.modelSetting.getPhysicsFileName();
+            if (!path.equals("")) {
+                String modelPath = modelHomeDirectory + path;
+                byte[] buffer = LAppMinimumPal.loadFileAsBytes(modelPath);
+
+                loadPhysics(buffer);
+            }
+            if (physics != null) {
+                updateScheduler.addUpdatableList(new CubismPhysicsUpdater(physics));
             }
         }
 
@@ -330,6 +314,25 @@ public class LAppMinimumModel extends CubismUserModel {
                 loadUserData(buffer);
             }
         }
+
+        // Look
+        {
+            look = CubismLook.create();
+
+            List<CubismLook.LookParameterData> lookParameters = new ArrayList<CubismLook.LookParameterData>();
+            lookParameters.add(new CubismLook.LookParameterData(idParamAngleX, 30.0f));
+            lookParameters.add(new CubismLook.LookParameterData(idParamAngleY, 0.0f, 30.0f));
+            lookParameters.add(new CubismLook.LookParameterData(idParamAngleZ, 0.0f, 0.0f, -30.0f));
+            lookParameters.add(new CubismLook.LookParameterData(idParamBodyAngleX, 10.0f));
+            lookParameters.add(new CubismLook.LookParameterData(idParamEyeBallX, 1.0f));
+            lookParameters.add(new CubismLook.LookParameterData(idParamEyeBallY, 0.0f, 1.0f));
+
+            look.setParameters(lookParameters);
+
+            updateScheduler.addUpdatableList(new CubismLookUpdater(look, dragManager));
+        }
+
+        updateScheduler.sortUpdatableList();
 
 
         // Set layout
@@ -423,8 +426,11 @@ public class LAppMinimumModel extends CubismUserModel {
 
             ((CubismRendererAndroid) getRenderer()).bindTexture(modelTextureNumber, glTextureNumber);
 
-            // AndroidのdecodeStreamメソッドで読む場合は恐らく乗算済みアルファとなる。
-            this.<CubismRendererAndroid>getRenderer().isPremultipliedAlpha(true);
+            if (LAppDefine.PREMULTIPLIED_ALPHA_ENABLE) {
+                this.<CubismRendererAndroid>getRenderer().isPremultipliedAlpha(true);
+            } else {
+                this.<CubismRendererAndroid>getRenderer().isPremultipliedAlpha(false);
+            }
         }
     }
 
@@ -473,6 +479,11 @@ public class LAppMinimumModel extends CubismUserModel {
      * パラメーターID: ParamEyeBallY
      */
     private final CubismId idParamEyeBallY;
+    /**
+     * 現フレームでメインモーションがパラメーターを更新したか
+     */
+    private boolean motionUpdated;
+
     /**
      * フレームバッファ以外の描画先
      */

@@ -71,11 +71,11 @@ Core : [CHANGELOG.md](Core/CHANGELOG.md)
 
 | 開発ツール          | バージョン            |
 |----------------|------------------|
-| Android Studio | Panda 1 2025.3.1 Patch 1 |
+| Android Studio | Panda 4 2025.3.4 Patch 1 |
 | Gradle | 8.11.1 |
 | Android Gradle Plugin | 8.9.1 |
 | Gradle JDK | 21.0.7 |
-| Android SDK | 36.0.0 |
+| Android SDK Platform | 36.0 |
 
 ## 動作確認環境
 
@@ -85,11 +85,12 @@ Core : [CHANGELOG.md](Core/CHANGELOG.md)
 
 ### Android
 
-| バージョン | デバイス     | エミュレーター | 16KBページサイズ *1 |
-|-------|----------|:-------:|:-------:|
-| 16    | Pixel 9  |         |    ✔︎    |
-| 16    | Pixel 7a |         |  |
-| 5.0   | Pixel 7a |    ✔    |  |
+| API レベル | デバイス     | 16KBページサイズ *1 |
+|---------|----------|:-------------:|
+| 36      | Pixel 9  |      ✔︎       |
+| 36      | Pixel 7a |               |
+
+※ エミュレーターは API 21 / 36 で動作確認済み
 
 本サンプルアプリケーションは**Android API 21**以上のAndroidバージョンで動作します。
 *1 開発者向けオプションを使用して有効にした環境となります

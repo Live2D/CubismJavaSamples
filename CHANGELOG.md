@@ -5,11 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 
+## [5-r.5] - 2026-06-04
+
+### Changed
+
+* Migrate system bar hiding in `MainActivity` and `MainActivityMinimum` classes from deprecated `setSystemUiVisibility()` to `WindowInsetsControllerCompat`.
+* Reorganize lifecycle methods in the `LAppDelegate` and `LAppMinimumDelegate` classes to reliably reconstruct rendering resources on GL surface recreation.
+* Change motion calculation order in `LAppModel` and `LAppMinimumModel` classes to be performed by `CubismUpdateScheduler` class with per-feature Updaters.
+* Change `LAppModel` and `LAppMinimumModel` classes to configure parameter IDs and settings for target tracking via `CubismLook` class.
+* Change `LAppWavFileHandler` class to implement the `IParameterProvider` interface.
+
+### Fixed
+
+* Fix collision detection misalignment in split-screen mode.
+* Fix app state reset when entering split-screen mode.
+* Fix the model being clipped by system bars in the Minimum sample app on Android 15 or later.
+* Fix an issue in the Android sample where shaders were rebuilt every time the app returned to the foreground.
+* Unify remaining uses of `OffscreenSurface` in comments to `RenderTarget`.
+* Fix missing resource release in `close()` method of the `LAppView` and `LAppMinimumView` classes.
+* Fix incorrect debug log output when tapping the body hit area of the model.
+* Fix the bug where Y-axis coordinate transform methods incorrectly used X-axis methods in the `LAppView` and `LAppMinimumView` classes.
+* Fix an issue where `PREMULTIPLIED_ALPHA_ENABLE` flag was not applied to texture loading in the `LAppTextureManager` and `LAppMinimumTextureManager` classes.
+* Fix an issue where `PREMULTIPLIED_ALPHA_ENABLE` flag was not referenced for renderer premultiplied alpha setting in the `LAppMinimumModel` class.
+
+
 ## [5-r.5-beta.1.1] - 2026-02-19
 
 ### Fixed
 
-* Fix some problems related to rendering and clipping mask. 
+* Fix some problems related to rendering and clipping mask.
   * See `CHANGELOG.md` in Framework.
 
 
@@ -230,6 +254,7 @@ Also adjust the return value of the getSpriteAlpha function.
 * New released!
 
 
+[5-r.5]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.5-beta.1.1...5-r.5
 [5-r.5-beta.1.1]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.5-beta.1...5-r.5-beta.1.1
 [5-r.5-beta.1]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.4.1...5-r.5-beta.1
 [5-r.4.1]: https://github.com/Live2D/CubismJavaSamples/compare/5-r.4...5-r.4.1

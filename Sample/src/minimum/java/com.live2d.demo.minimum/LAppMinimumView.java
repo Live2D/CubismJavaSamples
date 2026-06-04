@@ -32,7 +32,14 @@ public class LAppMinimumView implements AutoCloseable {
 
     @Override
     public void close() {
-        spriteShader.close();
+        renderingBuffer.destroyRenderTarget();
+
+        renderingSprite = null;
+
+        if (spriteShader != null) {
+            spriteShader.close();
+            spriteShader = null;
+        }
     }
 
     // ビューを初期化する
@@ -129,7 +136,7 @@ public class LAppMinimumView implements AutoCloseable {
      * @param refModel モデルデータ
      */
     public void preModelDraw(LAppMinimumModel refModel) {
-        // 別のレンダリングターゲットへ向けて描画する場合の使用するオフスクリーンサーフェス
+        // 別のレンダリングターゲットへ向けて描画する場合の使用するレンダーターゲット
         CubismRenderTargetAndroid useTarget;
 
         // 別のレンダリングターゲットへ向けて描画する場合
@@ -267,7 +274,7 @@ public class LAppMinimumView implements AutoCloseable {
         // 論理座標変換した座標を取得
         float screenY = deviceToScreen.transformY(deviceY);
         // 拡大、縮小、移動後の値
-        return viewMatrix.invertTransformX(screenY);
+        return viewMatrix.invertTransformY(screenY);
     }
 
     /**

@@ -14,16 +14,24 @@ import com.live2d.sdk.cubism.framework.CubismModelSettingJson;
 import com.live2d.sdk.cubism.framework.ICubismModelSetting;
 import com.live2d.sdk.cubism.framework.effect.CubismBreath;
 import com.live2d.sdk.cubism.framework.effect.CubismEyeBlink;
+import com.live2d.sdk.cubism.framework.effect.CubismLook;
 import com.live2d.sdk.cubism.framework.id.CubismId;
 import com.live2d.sdk.cubism.framework.id.CubismIdManager;
 import com.live2d.sdk.cubism.framework.math.CubismMatrix44;
 import com.live2d.sdk.cubism.framework.model.CubismMoc;
 import com.live2d.sdk.cubism.framework.model.CubismUserModel;
 import com.live2d.sdk.cubism.framework.motion.ACubismMotion;
+import com.live2d.sdk.cubism.framework.motion.CubismBreathUpdater;
 import com.live2d.sdk.cubism.framework.motion.CubismExpressionMotion;
+import com.live2d.sdk.cubism.framework.motion.CubismExpressionUpdater;
+import com.live2d.sdk.cubism.framework.motion.CubismEyeBlinkUpdater;
+import com.live2d.sdk.cubism.framework.motion.CubismLookUpdater;
 import com.live2d.sdk.cubism.framework.motion.CubismMotion;
+import com.live2d.sdk.cubism.framework.motion.CubismPhysicsUpdater;
+import com.live2d.sdk.cubism.framework.motion.CubismPoseUpdater;
 import com.live2d.sdk.cubism.framework.motion.IBeganMotionCallback;
 import com.live2d.sdk.cubism.framework.motion.IFinishedMotionCallback;
+import com.live2d.sdk.cubism.framework.motion.IBooleanSupplier;
 import com.live2d.sdk.cubism.framework.rendering.CubismRenderer;
 import com.live2d.sdk.cubism.framework.rendering.android.CubismRenderTargetAndroid;
 import com.live2d.sdk.cubism.framework.rendering.android.CubismRendererAndroid;
@@ -98,20 +106,31 @@ public class LAppModel extends CubismUserModel {
     }
 
     /**
+     * レンダラとテクスチャを再構築する。GLコンテキストが破棄された場合に呼び出す。
+     */
+    public void reloadRenderer() {
+        deleteRenderer();
+
+        CubismRenderer renderer = CubismRendererAndroid.create(
+            LAppDelegate.getInstance().getWindowWidth(),
+            LAppDelegate.getInstance().getWindowHeight()
+        );
+        setupRenderer(renderer);
+
+        setupTextures();
+    }
+
+    /**
      * モデルの更新処理。モデルのパラメーターから描画状態を決定する
      */
     public void update() {
         final float deltaTimeSeconds = LAppPal.getDeltaTime();
         userTimeSeconds += deltaTimeSeconds;
 
-        dragManager.update(deltaTimeSeconds);
-        dragX = dragManager.getX();
-        dragY = dragManager.getY();
-
         // モーションによるパラメーター更新の有無
-        boolean isMotionUpdated = false;
+        motionUpdated = false;
 
-//         前回セーブされた状態をロード
+        // 前回セーブされた状態をロード
         model.loadParameters();
 
         // モーションの再生がない場合、待機モーションの中からランダムで再生する
@@ -119,7 +138,7 @@ public class LAppModel extends CubismUserModel {
             startRandomMotion(LAppDefine.MotionGroup.IDLE.getId(), LAppDefine.Priority.IDLE.getPriority());
         } else {
             // モーションを更新
-            isMotionUpdated = motionManager.updateMotion(model, deltaTimeSeconds);
+            motionUpdated = motionManager.updateMotion(model, deltaTimeSeconds);
         }
 
         // モデルの状態を保存
@@ -128,58 +147,8 @@ public class LAppModel extends CubismUserModel {
         // 不透明度
         opacity = model.getModelOpacity();
 
-        // eye blink
-        // メインモーションの更新がないときだけまばたきする
-        if (!isMotionUpdated) {
-            if (eyeBlink != null) {
-                eyeBlink.updateParameters(model, deltaTimeSeconds);
-            }
-        }
-
-        // expression
-        if (expressionManager != null) {
-            // 表情でパラメータ更新（相対変化）
-            expressionManager.updateMotion(model, deltaTimeSeconds);
-        }
-
-        // ドラッグ追従機能
-        // ドラッグによる顔の向きの調整
-        model.addParameterValue(idParamAngleX, dragX * 30); // -30から30の値を加える
-        model.addParameterValue(idParamAngleY, dragY * 30);
-        model.addParameterValue(idParamAngleZ, dragX * dragY * (-30));
-
-        // ドラッグによる体の向きの調整
-        model.addParameterValue(idParamBodyAngleX, dragX * 10); // -10から10の値を加える
-
-        // ドラッグによる目の向きの調整
-        model.addParameterValue(idParamEyeBallX, dragX);  // -1から1の値を加える
-        model.addParameterValue(idParamEyeBallY, dragY);
-
-        // Breath Function
-        if (breath != null) {
-            breath.updateParameters(model, deltaTimeSeconds);
-        }
-
-        // Physics Setting
-        if (physics != null) {
-            physics.evaluate(model, deltaTimeSeconds);
-        }
-
-        // Lip Sync Setting
-        if (lipSync) {
-            // リアルタイムでリップシンクを行う場合、システムから音量を取得して0~1の範囲で値を入力します
-            float value = 0.0f;
-
-            for (int i = 0; i < lipSyncIds.size(); i++) {
-                CubismId lipSyncId = lipSyncIds.get(i);
-                model.addParameterValue(lipSyncId, value, 0.8f);
-            }
-        }
-
-        // Pose Setting
-        if (pose != null) {
-            pose.updateParameters(model, deltaTimeSeconds);
-        }
+        // 各種パラメーターの更新（まばたき・表情・ドラッグ追従・呼吸・物理・ポーズなど）
+        updateScheduler.onLateUpdate(model, deltaTimeSeconds);
 
         model.update();
     }
@@ -467,6 +436,8 @@ public class LAppModel extends CubismUserModel {
                         expressions.put(name, motion);
                     }
                 }
+
+                updateScheduler.addUpdatableList(new CubismExpressionUpdater(expressionManager));
             }
         }
 
@@ -479,6 +450,9 @@ public class LAppModel extends CubismUserModel {
 
                 loadPhysics(buffer);
             }
+            if (physics != null) {
+                updateScheduler.addUpdatableList(new CubismPhysicsUpdater(physics));
+            }
         }
 
         // Pose
@@ -489,11 +463,23 @@ public class LAppModel extends CubismUserModel {
                 byte[] buffer = createBuffer(modelPath);
                 loadPose(buffer);
             }
+            if (pose != null) {
+                updateScheduler.addUpdatableList(new CubismPoseUpdater(pose));
+            }
         }
 
         // Load eye blink data
         if (modelSetting.getEyeBlinkParameterCount() > 0) {
             eyeBlink = CubismEyeBlink.create(modelSetting);
+
+            // Use an anonymous IBooleanSupplier implementation
+            // so the updater needs to see the latest motionUpdated value on each frame.
+            updateScheduler.addUpdatableList(new CubismEyeBlinkUpdater(new IBooleanSupplier() {
+                @Override
+                public boolean getAsBoolean() {
+                    return motionUpdated;
+                }
+            }, eyeBlink));
         }
 
         // Load Breath Data
@@ -508,6 +494,8 @@ public class LAppModel extends CubismUserModel {
 
         breath.setParameters(breathParameters);
 
+        updateScheduler.addUpdatableList(new CubismBreathUpdater(breath));
+
         // Load UserData
         {
             String path = modelSetting.getUserDataFile();
@@ -518,6 +506,24 @@ public class LAppModel extends CubismUserModel {
             }
         }
 
+        // Look
+        {
+            look = CubismLook.create();
+
+            List<CubismLook.LookParameterData> lookParameters = new ArrayList<>();
+            lookParameters.add(new CubismLook.LookParameterData(idParamAngleX, 30.0f));
+            lookParameters.add(new CubismLook.LookParameterData(idParamAngleY, 0.0f, 30.0f));
+            lookParameters.add(new CubismLook.LookParameterData(idParamAngleZ, 0.0f, 0.0f, -30.0f));
+            lookParameters.add(new CubismLook.LookParameterData(idParamBodyAngleX, 10.0f));
+            lookParameters.add(new CubismLook.LookParameterData(idParamEyeBallX, 1.0f));
+            lookParameters.add(new CubismLook.LookParameterData(idParamEyeBallY, 0.0f, 1.0f));
+
+            look.setParameters(lookParameters);
+
+            updateScheduler.addUpdatableList(new CubismLookUpdater(look, dragManager));
+        }
+
+        updateScheduler.sortUpdatableList();
 
         // EyeBlinkIds
         int eyeBlinkIdCount = modelSetting.getEyeBlinkParameterCount();
@@ -687,6 +693,10 @@ public class LAppModel extends CubismUserModel {
      * パラメーターID: ParamEyeBallY
      */
     private final CubismId idParamEyeBallY;
+    /**
+     * 現フレームでメインモーションがパラメーターを更新したか
+     */
+    private boolean motionUpdated;
 
     /**
      * フレームバッファ以外の描画先

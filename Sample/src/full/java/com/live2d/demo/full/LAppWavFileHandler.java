@@ -17,9 +17,11 @@ import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.os.Build;
 
+import com.live2d.sdk.cubism.framework.motion.IParameterProvider;
+
 import java.io.IOException;
 
-public class LAppWavFileHandler extends Thread {
+public class LAppWavFileHandler extends Thread implements IParameterProvider {
     public LAppWavFileHandler(String filePath) {
         this.filePath = filePath;
     }
@@ -73,6 +75,24 @@ public class LAppWavFileHandler extends Thread {
         int offset = 100;
         byte[] voiceBuffer = LAppPal.loadFileAsBytes(filePath);
         audioTrack.write(voiceBuffer, offset, voiceBuffer.length - offset);
+    }
+
+    @Override
+    public boolean update() {
+        return false;
+    }
+
+    @Override
+    public boolean update(float deltaTimeSeconds) {
+        return false;
+    }
+
+    @Override
+    public float getParameter() {
+        // Lip sync is not implemented in this sample.
+        // To enable lip sync, compute the RMS from the audio buffer
+        // and return a normalized value (e.g. [0, 1]).
+        return 0.0f;
     }
 
     private final String filePath;
